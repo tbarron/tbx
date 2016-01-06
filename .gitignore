@@ -1,4 +1,7 @@
 .cache
 __pycache__
 pytest.ini
+TODO
+tbx.egg-info
 *.pyc
+*~
