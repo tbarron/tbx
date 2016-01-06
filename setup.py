@@ -20,7 +20,7 @@ test_requirements = [
 
 setup(
     name='tbx',
-    # version=version.__version__,
+    version='0.0.2',
     description="toolbox",
     long_description=readme,
     author="Tom Barron",
@@ -29,8 +29,7 @@ setup(
     packages=[
         'tbx',
     ],
-    package_dir={'tbx':
-                 '.'},
+    package_dir={'tbx': 'tbx'},
     include_package_data=True,
     install_requires=requirements,
     license="ISCL",
