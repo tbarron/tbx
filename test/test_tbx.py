@@ -57,6 +57,72 @@ def test_chdir_rug(tmpdir):
 
 
 # -----------------------------------------------------------------------------
+def test_contents_nosuch_default():
+    """
+    Attempting to get the contents of a non-existent file with a default value
+    should return the default
+    """
+    pytest.skip('construction')
+
+
+# -----------------------------------------------------------------------------
+def test_contents_nosuch_nodefault():
+    """
+    Attempting to get the contents of a non-existent file with no default value
+    should raise an exception
+    """
+    pytest.skip('construction')
+
+
+# -----------------------------------------------------------------------------
+def test_contents_good_str():
+    """
+    Calling contents on a file that exists as a string
+    """
+    pytest.skip('construction')
+
+
+# -----------------------------------------------------------------------------
+def test_contents_good_list():
+    """
+    Calling contents on a file that exists as a list
+    """
+    pytest.skip('construction')
+
+
+# -----------------------------------------------------------------------------
+@pytest.mark.parametrize('level', [0, 1, 2, None])
+def test_dirname(level):
+    """
+    Default level for dirname is 0
+    """
+    pytest.skip('construction')
+
+
+# -----------------------------------------------------------------------------
+def test_revnumerate():
+    """
+    Enumerate a copy of a sequence in reverse as a generator
+    """
+    pytest.skip('construction')
+
+
+# -----------------------------------------------------------------------------
+def test_dispatch_help_nosuch():
+    """
+    Dispatch help on a function that does not exist
+    """
+    pytest.skip('construction')
+
+# -----------------------------------------------------------------------------
+def test_dispatch_help_good():
+    """
+    Dispatch help on a function that exists
+    """
+    pytest.skip('construction')
+
+
+# -----------------------------------------------------------------------------
 def test_dispatch_bad(capsys):
     """
     Calling dispatch with a non-existent function name
