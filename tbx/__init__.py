@@ -3,6 +3,8 @@ Toolbox
 """
 import contextlib
 import os
+import sys
+import types
 
 
 # -----------------------------------------------------------------------------
@@ -20,6 +22,23 @@ def chdir(directory):
 
     finally:
         os.chdir(origin)
+
+
+# -----------------------------------------------------------------------------
+def dispatch(module, prefix, function, argl=None, kwd=None):
+    """
+    If <module>.<prefix>_<function> exists as a function, call it with *argl*
+    """
+    arglist = argl or []
+    kwargs = kwd or {}
+    mod = sys.modules[module]
+    try:
+        fullname = '_'.join([prefix, function])
+        func = getattr(mod, fullname)
+        if isinstance(func, types.FunctionType):
+            rval = func(*arglist, **kwargs)
+    except AttributeError:
+        sys.exit('Module {0} has no function {1}'.format(module, fullname))
 
 
 @contextlib.contextmanager
