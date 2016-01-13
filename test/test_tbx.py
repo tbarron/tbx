@@ -3,6 +3,7 @@ Tests for module tbx
 """
 import os
 import pdb    # pylint: disable=unused-import
+import pytest
 import shutil
 
 
@@ -53,6 +54,41 @@ def test_chdir_rug(tmpdir):
             assert os.getcwd() == rug.strpath
     assert os.getcwd() == origin
     assert 'No such file or directory' in str(err)
+
+
+# -----------------------------------------------------------------------------
+def test_dispatch_bad(capsys):
+    """
+    Calling dispatch with a non-existent function name
+    """
+    with pytest.raises(SystemExit) as err:
+        tbx.dispatch(module=__name__,
+                     prefix='dtst',
+                     function='bumble',
+                     argl=[1,2,3])
+    assert 'Module test_tbx has no function dtst_bumble' in str(err)
+    out, err = capsys.readouterr()
+    assert out == ''
+
+
+# -----------------------------------------------------------------------------
+def test_dispatch_good(capsys):
+    """
+    Calling dispatch with a good function name
+    """
+    argl = [7, 8, 9, 17]
+    tbx.dispatch(__name__, 'dtst', 'foobar', argl)
+    out, err = capsys.readouterr()
+    exp = "This is foobar: {0}".format(', '.join([str(_) for _ in argl]))
+    assert exp in out
+
+
+# -----------------------------------------------------------------------------
+def dtst_foobar(*args):
+    """
+    Dispatchable function for test_dispatch_good
+    """
+    print "This is foobar: {0}".format(", ".join([str(_) for _ in args]))
 
 
 # -----------------------------------------------------------------------------
