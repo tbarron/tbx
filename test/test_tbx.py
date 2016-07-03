@@ -230,3 +230,33 @@ def test_envset_rmset():
         os.getenv(key) == origval
     for key in keys:
         del os.environ[key]
+
+# -----------------------------------------------------------------------------
+def test_fatal_empty():
+    """
+    fatal(empty message) should throw a SystemExit with some non-empty message
+    """
+    exp = 'Fatal error with no reason specified'
+    with pytest.raises(SystemExit) as err:
+        tbx.fatal()
+    assert exp in str(err)
+
+# -----------------------------------------------------------------------------
+def test_fatal_msg():
+    """
+    fatal(non-empty message) should throw a SystemExit with the message
+    """
+    msg = 'This is a fatal error message'
+    with pytest.raises(SystemExit) as err:
+        tbx.fatal(msg)
+    assert msg in str(err)
+
+# -----------------------------------------------------------------------------
+def test_fatal_number():
+    """
+    fatal(non-string) should throw a SystemExit with str(message)
+    """
+    msg = 32.198
+    with pytest.raises(SystemExit) as err:
+        tbx.fatal(msg)
+    assert str(msg) in str(err)
