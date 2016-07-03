@@ -6,28 +6,26 @@ import pdb    # pylint: disable=unused-import
 import pytest
 import shutil
 
-
 import pytest
 
-
 import tbx
-
 
 # -----------------------------------------------------------------------------
 def test_chdir_good(tmpdir):
     """
-    Trying to chdir to a non existent directory
+    chdir(a.directory.that.exists) should work. After the with statement, we
+    should be back where we started.
     """
     orig = os.getcwd()
     with tbx.chdir(tmpdir.strpath):
         assert os.getcwd() == tmpdir.strpath
     assert orig == os.getcwd()
 
-
 # -----------------------------------------------------------------------------
 def test_chdir_nosuchdir(tmpdir):
     """
-    Trying to chdir to a non existent directory
+    chdir(a.directory.that.does.not.exist) should throw an OSError with the
+    message 'No such file or directory'.
     """
     nosuch = tmpdir.join('foo/bar/somewhere')
     with pytest.raises(OSError) as err:
@@ -35,11 +33,11 @@ def test_chdir_nosuchdir(tmpdir):
             assert os.getcwd() == tmpdir.strpath
     assert 'No such file or directory' in str(err)
 
-
 # -----------------------------------------------------------------------------
 def test_chdir_rug(tmpdir):
     """
-    Trying to chdir out af a non existent directory
+    Trying to chdir out af a non existent directory (i.e., one that was removed
+    after we chdir'd into it)
     """
     origin = os.getcwd()
     rug = tmpdir.join('foo/bar/nosuch')
@@ -55,7 +53,6 @@ def test_chdir_rug(tmpdir):
     assert os.getcwd() == origin
     assert 'No such file or directory' in str(err)
 
-
 # -----------------------------------------------------------------------------
 def test_contents_nosuch_default():
     """
@@ -63,7 +60,6 @@ def test_contents_nosuch_default():
     should return the default
     """
     pytest.skip('construction')
-
 
 # -----------------------------------------------------------------------------
 def test_contents_nosuch_nodefault():
@@ -73,7 +69,6 @@ def test_contents_nosuch_nodefault():
     """
     pytest.skip('construction')
 
-
 # -----------------------------------------------------------------------------
 def test_contents_good_str():
     """
@@ -81,14 +76,12 @@ def test_contents_good_str():
     """
     pytest.skip('construction')
 
-
 # -----------------------------------------------------------------------------
 def test_contents_good_list():
     """
     Calling contents on a file that exists as a list
     """
     pytest.skip('construction')
-
 
 # -----------------------------------------------------------------------------
 @pytest.mark.parametrize('level', [0, 1, 2, None])
@@ -98,14 +91,12 @@ def test_dirname(level):
     """
     pytest.skip('construction')
 
-
 # -----------------------------------------------------------------------------
 def test_revnumerate():
     """
     Enumerate a copy of a sequence in reverse as a generator
     """
     pytest.skip('construction')
-
 
 # -----------------------------------------------------------------------------
 def test_dispatch_help_nosuch():
@@ -121,33 +112,30 @@ def test_dispatch_help_good():
     """
     pytest.skip('construction')
 
-
 # -----------------------------------------------------------------------------
 def test_dispatch_bad(capsys):
     """
     Calling dispatch with a non-existent function name
     """
     with pytest.raises(SystemExit) as err:
-        tbx.dispatch(module=__name__,
+        tbx.dispatch(mname=__name__,
                      prefix='dtst',
-                     function='bumble',
-                     argl=[1,2,3])
+                     args=['bumble', 1,2,3])
     assert 'Module test_tbx has no function dtst_bumble' in str(err)
     out, err = capsys.readouterr()
     assert out == ''
-
 
 # -----------------------------------------------------------------------------
 def test_dispatch_good(capsys):
     """
     Calling dispatch with a good function name
     """
-    argl = [7, 8, 9, 17]
-    tbx.dispatch(__name__, 'dtst', 'foobar', argl)
+    pytest.dbgfunc()
+    argl = ['foobar', 7, 8, 9, 17]
+    tbx.dispatch(__name__, 'dtst', argl)
     out, err = capsys.readouterr()
-    exp = "This is foobar: {0}".format(', '.join([str(_) for _ in argl]))
+    exp = "This is foobar: {0}".format(', '.join([str(_) for _ in argl[1:]]))
     assert exp in out
-
 
 # -----------------------------------------------------------------------------
 def dtst_foobar(*args):
@@ -155,7 +143,6 @@ def dtst_foobar(*args):
     Dispatchable function for test_dispatch_good
     """
     print "This is foobar: {0}".format(", ".join([str(_) for _ in args]))
-
 
 # -----------------------------------------------------------------------------
 def test_envset_new_1():
@@ -167,7 +154,6 @@ def test_envset_new_1():
     with tbx.envset(TEST_ENVSET='foobar'):
         assert os.getenv('TEST_ENVSET') == 'foobar'
     assert os.getenv('TEST_ENVSET') is None
-
 
 # -----------------------------------------------------------------------------
 def test_envset_new_2():
@@ -185,7 +171,6 @@ def test_envset_new_2():
     assert os.getenv('TEST_ENVSET') is None
     assert os.getenv('TEST_ENVSET_2') is None
 
-
 # -----------------------------------------------------------------------------
 def test_envset_old_1():
     """
@@ -196,7 +181,6 @@ def test_envset_old_1():
     with tbx.envset(HOME='/somewhere/over/the/rainbow'):
         assert os.getenv('HOME') == '/somewhere/over/the/rainbow'
     assert os.getenv('HOME') == orig
-
 
 # -----------------------------------------------------------------------------
 def test_envset_old_2():
@@ -213,3 +197,36 @@ def test_envset_old_2():
         assert os.getenv('TERM') == 'not-the-old-value'
     assert os.getenv('HOME') == orig['HOME']
     assert os.getenv('TERM') == orig['TERM']
+
+# -----------------------------------------------------------------------------
+def test_envset_rm():
+    """
+    Temporarily unset an environment variable
+    """
+    vname = 'TEST_ENVSET_RM'
+    origval = 'original value'
+    kwa = {vname: None}
+    os.environ[vname] = origval
+    with tbx.envset(**kwa):
+        assert os.getenv(vname) is None
+    assert os.getenv(vname) == origval
+    del os.environ[vname]
+
+# -----------------------------------------------------------------------------
+def test_envset_rmset():
+    """
+    Temporarily set one environment variable and unset another one
+    """
+    keys = ['TEST_ENVSET_RM', 'TEST_ENVSET_SET']
+    origval = dict(zip(keys, ['something', 'something else']))
+    updval = dict(zip(keys, [None, 'different from the first']))
+
+    for key in keys:
+        os.environ[key] = origval[key]
+    with tbx.envset(**updval):
+        for key in keys:
+            assert os.getenv(key) == updval[key]
+    for key in keys:
+        os.getenv(key) == origval
+    for key in keys:
+        del os.environ[key]
