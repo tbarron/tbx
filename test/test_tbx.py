@@ -99,18 +99,98 @@ def test_revnumerate():
     pytest.skip('construction')
 
 # -----------------------------------------------------------------------------
+def test_dispatch_help_good(capsys):
+    """
+    Dispatch help on a function that exists and has a doc string
+    """
+    pytest.dbgfunc()
+    exp = 'foobar - print a comma delimited argument list'
+    tbx.dispatch_help(__name__, 'dtst', ['foobar'])
+    out, err = capsys.readouterr()
+    assert exp in out
+
+# -----------------------------------------------------------------------------
+def test_dispatch_help_help(capsys):
+    """
+    Dispatch help on help
+    """
+    pytest.dbgfunc()
+    exp = ['help - show a list of available commands',
+           'With no arguments',
+           'With a command as argument']
+    tbx.dispatch_help(__name__, 'dtst', ['help'])
+    out, err = capsys.readouterr()
+    assert all([_ in out for _ in exp])
+
+# -----------------------------------------------------------------------------
+def test_dispatch_help_multiple(capsys):
+    """
+    Dispatch help for multiple topics
+    """
+    pytest.dbgfunc()
+    exp = ['help - show a list of available commands',
+           'With no arguments',
+           'With a command as argument',
+           'foobar - print a comma delimited argument list']
+    tbx.dispatch_help(__name__, 'dtst', ['foobar', 'help'])
+    out, err = capsys.readouterr()
+    assert all([_ in out for _ in exp])
+
+# -----------------------------------------------------------------------------
+def test_dispatch_help_noargs(capsys):
+    """
+    Dispatch help with no arguments -- should list available dispatchables
+    """
+    pytest.dbgfunc()
+    exp = ['help - show a list of available commands',
+           'foobar - print a comma delimited argument list']
+    tbx.dispatch_help(__name__, 'dtst')
+    out, err = capsys.readouterr()
+    assert all([_ in out for _ in exp])
+
+# -----------------------------------------------------------------------------
+def test_dispatch_help_nodoc():
+    """
+    Dispatch help on a function that has no doc string
+    """
+    pytest.dbgfunc()
+    exp = 'Function xtst_undocumented is missing a __doc__ string'
+    with pytest.raises(SystemExit) as err:
+        tbx.dispatch_help(__name__, 'xtst', ['undocumented'])
+    assert exp in str(err)
+
+# -----------------------------------------------------------------------------
+def test_dispatch_help_nomodule():
+    """
+    Dispatch help on a non-existent module
+    """
+    pytest.dbgfunc()
+    exp = 'Module xtest_tbx is not in sys.modules'
+    with pytest.raises(SystemExit) as err:
+        tbx.dispatch('x' + __name__, 'foo', ['help', 'nosuch'])
+    assert exp in str(err)
+
+# -----------------------------------------------------------------------------
+def test_dispatch_help_nopfx():
+    """
+    Dispatch help with no prefix
+    """
+    pytest.dbgfunc()
+    exp = '*prefix* is required'
+    with pytest.raises(SystemExit) as err:
+        tbx.dispatch(__name__, args=['help', 'nosuch'])
+    assert exp in str(err)
+
+# -----------------------------------------------------------------------------
 def test_dispatch_help_nosuch():
     """
     Dispatch help on a function that does not exist
     """
-    pytest.skip('construction')
-
-# -----------------------------------------------------------------------------
-def test_dispatch_help_good():
-    """
-    Dispatch help on a function that exists
-    """
-    pytest.skip('construction')
+    pytest.dbgfunc()
+    exp = 'Module test_tbx has no attribute foo_nosuch'
+    with pytest.raises(SystemExit) as err:
+        tbx.dispatch(__name__, 'foo', ['help', 'nosuch'])
+    assert exp in str(err)
 
 # -----------------------------------------------------------------------------
 def test_dispatch_bad(capsys):
@@ -139,10 +219,13 @@ def test_dispatch_good(capsys):
 
 # -----------------------------------------------------------------------------
 def dtst_foobar(*args):
-    """
-    Dispatchable function for test_dispatch_good
+    """foobar - print a comma delimited argument list
     """
     print "This is foobar: {0}".format(", ".join([str(_) for _ in args]))
+
+# -----------------------------------------------------------------------------
+def xtst_undocumented(*args):
+    print "This is undocumented"
 
 # -----------------------------------------------------------------------------
 def test_envset_new_1():
