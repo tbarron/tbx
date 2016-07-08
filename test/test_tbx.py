@@ -2,10 +2,9 @@
 Tests for module tbx
 """
 import os
-import pdb    # pylint: disable=unused-import
-import pytest
 import shutil
 
+import pexpect
 import pytest
 
 import tbx
