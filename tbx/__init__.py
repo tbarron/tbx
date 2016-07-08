@@ -6,7 +6,6 @@ import os
 import sys
 import types
 
-
 # -----------------------------------------------------------------------------
 @contextlib.contextmanager
 def chdir(directory):
@@ -79,7 +78,7 @@ def dispatch_help(mname='__main__', prefix=None, args=None):
                                  "   With a command as argument, show help for " +
                                  "that command",
                                  ""
-                                 ]))
+                                ]))
             else:
                 funcname = '_'.join([prefix, topic])
                 try:

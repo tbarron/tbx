@@ -1,3 +1,6 @@
+"""
+Configure pytest
+"""
 import os
 import pdb
 import sys
@@ -32,7 +35,7 @@ def pytest_configure(config):
     # it off.
     if config.option.all and config.option.exitfirst:
         config.option.exitfirst = False
-    
+
 # -----------------------------------------------------------------------------
 def pytest_runtest_setup(item):
     """
