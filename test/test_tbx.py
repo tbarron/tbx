@@ -165,7 +165,7 @@ def test_dispatch_help_nomodule():
     Dispatch help on a non-existent module
     """
     pytest.dbgfunc()
-    exp = 'Module xtest_tbx is not in sys.modules'
+    exp = 'Module xtest.test_tbx is not in sys.modules'
     with pytest.raises(SystemExit) as err:
         tbx.dispatch('x' + __name__, 'foo', ['help', 'nosuch'])
     assert exp in str(err)
@@ -187,7 +187,7 @@ def test_dispatch_help_nosuch():
     Dispatch help on a function that does not exist
     """
     pytest.dbgfunc()
-    exp = 'Module test_tbx has no attribute foo_nosuch'
+    exp = 'Module test.test_tbx has no attribute foo_nosuch'
     with pytest.raises(SystemExit) as err:
         tbx.dispatch(__name__, 'foo', ['help', 'nosuch'])
     assert exp in str(err)
@@ -200,8 +200,8 @@ def test_dispatch_bad(capsys):
     with pytest.raises(SystemExit) as err:
         tbx.dispatch(mname=__name__,
                      prefix='dtst',
-                     args=['bumble', 1,2,3])
-    assert 'Module test_tbx has no function dtst_bumble' in str(err)
+                     args=['bumble', 1, 2, 3])
+    assert 'Module test.test_tbx has no function dtst_bumble' in str(err)
     out, err = capsys.readouterr()
     assert out == ''
 
