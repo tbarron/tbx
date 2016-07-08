@@ -89,7 +89,16 @@ def test_dirname(level):
     """
     Default level for dirname is 0
     """
-    pytest.skip('construction')
+    pytest.dbgfunc()
+    inp = '/a/b/c/d/e'
+    exp = inp[:]
+    if level is None:
+        exp = os.path.dirname(exp)
+    else:
+        for layer in range(level):
+            exp = os.path.dirname(exp)
+    result = tbx.dirname(inp, level=level)
+    assert result == exp
 
 # -----------------------------------------------------------------------------
 def test_revnumerate():
