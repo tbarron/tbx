@@ -343,3 +343,11 @@ def test_fatal_number():
     with pytest.raises(SystemExit) as err:
         tbx.fatal(msg)
     assert str(msg) in str(err)
+
+# -----------------------------------------------------------------------------
+def test_zlint():
+    """
+    Run pylint on the payload and test code
+    """
+    result = pexpect.run('pylint -rn tbx test')
+    assert result == ''
