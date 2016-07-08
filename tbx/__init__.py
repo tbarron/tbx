@@ -23,6 +23,18 @@ def chdir(directory):
         os.chdir(origin)
 
 # -----------------------------------------------------------------------------
+def dirname(path, level=None):
+    """
+    Peel off *level* tails from path
+    """
+    if level is None:
+        level = 1
+    rval = path
+    for layer in range(0, level):
+        rval = os.path.dirname(rval)
+    return rval
+
+# -----------------------------------------------------------------------------
 def dispatch(mname='__main__', prefix=None, args=None):
     """
     Call a subfunction from module *mname* based on *prefix* and *args*
