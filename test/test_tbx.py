@@ -379,7 +379,7 @@ def test_envset_rmset():
         for key in keys:
             assert os.getenv(key) == updval[key]
     for key in keys:
-        os.getenv(key) == origval
+        assert os.getenv(key) == origval[key]
     for key in keys:
         del os.environ[key]
 
