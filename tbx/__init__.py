@@ -3,6 +3,7 @@ Toolbox
 """
 import contextlib
 import os
+import re
 import sys
 import types
 
@@ -21,6 +22,32 @@ def chdir(directory):
 
     finally:
         os.chdir(origin)
+
+# -----------------------------------------------------------------------------
+def contents(name=None, default=None, fmt='str', sep=None):
+    """
+    Return the contents
+    """
+    try:
+        rbl = open(name, 'r')
+        data = rbl.read()
+    except IOError as err:
+        if 'Permission denied' in str(err):
+            raise Error("Can't read file {0}".format(name))
+        elif 'No such file' in str(err) and default:
+            data = default
+        else:
+            raise
+    if fmt == 'list' or fmt == list:
+        sep = sep or '\n'
+        rval = re.split(sep, data)
+    elif fmt == 'str' or fmt == str:
+        if sep:
+            raise Error('Non-default separator is only valid for list format')
+        rval = data
+    else:
+        raise Error('Invalid format')
+    return rval
 
 # -----------------------------------------------------------------------------
 def dirname(path, level=None):
@@ -141,3 +168,10 @@ def fatal(msg='Fatal error with no reason specified'):
     The default value is okay because strings in python are immutable
     """
     sys.exit(msg)
+
+# -----------------------------------------------------------------------------
+class Error(Exception):
+    """
+    Errors raised in this file
+    """
+    pass
