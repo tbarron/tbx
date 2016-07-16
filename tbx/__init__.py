@@ -57,7 +57,7 @@ def dirname(path, level=None):
     if level is None:
         level = 1
     rval = path
-    for layer in range(0, level):
+    for _ in range(0, level):
         rval = os.path.dirname(rval)
     return rval
 

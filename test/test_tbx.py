@@ -5,8 +5,8 @@ import os
 import re
 import shutil
 
-import pexpect
 import pytest
+import pexpect
 
 import tbx
 
@@ -153,7 +153,7 @@ def test_dirname(level):
     if level is None:
         exp = os.path.dirname(exp)
     else:
-        for layer in range(level):
+        for _ in range(level):
             exp = os.path.dirname(exp)
     result = tbx.dirname(inp, level=level)
     assert result == exp
@@ -173,7 +173,7 @@ def test_dispatch_help_good(capsys):
     pytest.dbgfunc()
     exp = 'foobar - print a comma delimited argument list'
     tbx.dispatch_help(__name__, 'dtst', ['foobar'])
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert exp in out
 
 # -----------------------------------------------------------------------------
@@ -186,7 +186,7 @@ def test_dispatch_help_help(capsys):
            'With no arguments',
            'With a command as argument']
     tbx.dispatch_help(__name__, 'dtst', ['help'])
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
 
 # -----------------------------------------------------------------------------
@@ -200,7 +200,7 @@ def test_dispatch_help_multiple(capsys):
            'With a command as argument',
            'foobar - print a comma delimited argument list']
     tbx.dispatch_help(__name__, 'dtst', ['foobar', 'help'])
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
 
 # -----------------------------------------------------------------------------
@@ -212,7 +212,7 @@ def test_dispatch_help_noargs(capsys):
     exp = ['help - show a list of available commands',
            'foobar - print a comma delimited argument list']
     tbx.dispatch_help(__name__, 'dtst')
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
 
 # -----------------------------------------------------------------------------
@@ -280,7 +280,7 @@ def test_dispatch_good(capsys):
     pytest.dbgfunc()
     argl = ['foobar', 7, 8, 9, 17]
     tbx.dispatch(__name__, 'dtst', argl)
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     exp = "This is foobar: {0}".format(', '.join([str(_) for _ in argl[1:]]))
     assert exp in out
 
@@ -291,8 +291,10 @@ def dtst_foobar(*args):
     print "This is foobar: {0}".format(", ".join([str(_) for _ in args]))
 
 # -----------------------------------------------------------------------------
+# pylint: disable=missing-docstring,unused-argument
 def xtst_undocumented(*args):
     print "This is undocumented"
+# pylint: enable=missing-docstring,unused-argument
 
 # -----------------------------------------------------------------------------
 def test_envset_new_1():
