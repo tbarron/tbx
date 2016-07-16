@@ -2,6 +2,7 @@
 Tests for module tbx
 """
 import os
+import re
 import shutil
 
 import pexpect
@@ -53,34 +54,92 @@ def test_chdir_rug(tmpdir):
     assert 'No such file or directory' in str(err)
 
 # -----------------------------------------------------------------------------
-def test_contents_nosuch_default():
+# pylint: disable=redefined-outer-name
+@pytest.fixture
+def ctest(tmpdir):
+    """
+    Set up for contents tests
+    """
+    ctest.data = tmpdir.join('ctest_data')
+    ctest.exp = '\n'.join(['this is the test data',
+                           'this is the second line',
+                           'frumple'])
+    ctest.data.write(ctest.exp)
+    return ctest
+
+# -----------------------------------------------------------------------------
+def test_contents_nosuch_default(ctest):
     """
     Attempting to get the contents of a non-existent file with a default value
     should return the default
     """
-    pytest.skip('construction')
+    pytest.dbgfunc()
+    filename = ctest.data.strpath + 'xxx'
+    result = tbx.contents(filename,
+                          default='foobar')
+    assert result == 'foobar'
 
 # -----------------------------------------------------------------------------
-def test_contents_nosuch_nodefault():
+def test_contents_nosuch_nodefault(ctest):
     """
     Attempting to get the contents of a non-existent file with no default value
     should raise an exception
     """
-    pytest.skip('construction')
+    pytest.dbgfunc()
+    filename = ctest.data.strpath + 'xxx'
+    with pytest.raises(IOError) as err:
+        _ = tbx.contents(filename)
+    assert "No such file or directory" in str(err)
+    assert filename in str(err)
 
 # -----------------------------------------------------------------------------
-def test_contents_good_str():
+def test_contents_good_str(ctest):
     """
     Calling contents on a file that exists as a string
     """
-    pytest.skip('construction')
+    pytest.dbgfunc()
+    result = tbx.contents(ctest.data.strpath)
+    assert result == ctest.exp
 
 # -----------------------------------------------------------------------------
-def test_contents_good_list():
+def test_contents_good_list(ctest):
     """
     Calling contents on a file that exists as a list
     """
-    pytest.skip('construction')
+    pytest.dbgfunc()
+    result = tbx.contents(ctest.data.strpath, fmt='list')
+    assert result == ctest.exp.split('\n')
+
+# -----------------------------------------------------------------------------
+def test_contents_good_altsep(ctest):
+    """
+    Calling contents on a file that exists as a list
+    """
+    pytest.dbgfunc()
+    result = tbx.contents(ctest.data.strpath, fmt='list', sep=r'\s')
+    assert len(result) == len(re.split(r'\s', ctest.exp))
+    assert result == re.split(r'\s', ctest.exp)
+
+# -----------------------------------------------------------------------------
+def test_contents_badfmt(ctest):
+    """
+    Calling contents on a file that exists as a list
+    """
+    pytest.dbgfunc()
+    with pytest.raises(tbx.Error) as err:
+        _ = tbx.contents(ctest.data.strpath, fmt='str', sep=r'\s')
+    assert 'Non-default separator is only valid for list format' in str(err)
+
+# -----------------------------------------------------------------------------
+def test_contents_badperm(ctest):
+    """
+    Calling contents on a file that is not readable with throw an exception
+    """
+    # pytest.skip('construction')
+    ctest.data.chmod(0000)
+    with pytest.raises(tbx.Error) as err:
+        _ = tbx.contents(ctest.data.strpath, fmt=str, sep=r'\s')
+    assert "Can't read file {0}".format(ctest.data.strpath) in str(err)
 
 # -----------------------------------------------------------------------------
 @pytest.mark.parametrize('level', [0, 1, 2, None])
