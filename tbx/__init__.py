@@ -170,6 +170,16 @@ def fatal(msg='Fatal error with no reason specified'):
     sys.exit(msg)
 
 # -----------------------------------------------------------------------------
+def revnumerate(sequence):
+    """
+    Enumerate *sequence* in reverse
+    """
+    idx = len(sequence) -1
+    for item in reversed(sequence):
+        yield idx, item
+        idx -= 1
+
+# -----------------------------------------------------------------------------
 class Error(Exception):
     """
     Errors raised in this file

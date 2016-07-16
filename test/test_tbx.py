@@ -163,7 +163,7 @@ def test_revnumerate():
     """
     Enumerate a copy of a sequence in reverse as a generator
     """
-    pytest.skip('construction')
+    pytest.dbgfunc()
     data = ['john', 'mary', 'bill', 'sally', 'pfhisllig']
     pidx = None
     for idx, item in tbx.revnumerate(data):
