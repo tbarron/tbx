@@ -164,6 +164,13 @@ def test_revnumerate():
     Enumerate a copy of a sequence in reverse as a generator
     """
     pytest.skip('construction')
+    data = ['john', 'mary', 'bill', 'sally', 'pfhisllig']
+    pidx = None
+    for idx, item in tbx.revnumerate(data):
+        if pidx:
+            assert idx < pidx
+            assert item == data[idx]
+        pidx = idx
 
 # -----------------------------------------------------------------------------
 def test_dispatch_help_good(capsys):
