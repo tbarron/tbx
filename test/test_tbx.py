@@ -2,6 +2,7 @@
 Tests for module tbx
 """
 # pylint: disable=locally-disabled
+# pylint: disable=redefined-outer-name
 import os
 import re
 import shutil
@@ -53,20 +54,6 @@ def test_chdir_rug(tmpdir):
             assert os.getcwd() == rug.strpath
     assert os.getcwd() == origin
     assert 'No such file or directory' in str(err)
-
-# -----------------------------------------------------------------------------
-# pylint: disable=redefined-outer-name
-@pytest.fixture
-def ctest(tmpdir):
-    """
-    Set up for contents tests
-    """
-    ctest.data = tmpdir.join('ctest_data')
-    ctest.exp = '\n'.join(['this is the test data',
-                           'this is the second line',
-                           'frumple'])
-    ctest.data.write(ctest.exp)
-    return ctest
 
 # -----------------------------------------------------------------------------
 def test_contents_nosuch_default(ctest):
@@ -429,3 +416,16 @@ def test_zlint():
     """
     result = tbx.run('pylint -rn tbx test')
     assert result == ''
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def ctest(tmpdir):
+    """
+    Set up for contents tests
+    """
+    ctest.data = tmpdir.join('ctest_data')
+    ctest.exp = '\n'.join(['this is the test data',
+                           'this is the second line',
+                           'frumple'])
+    ctest.data.write(ctest.exp)
+    return ctest
