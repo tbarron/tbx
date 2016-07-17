@@ -4,6 +4,8 @@ Toolbox
 import contextlib
 import os
 import re
+import shlex
+import subprocess as sproc
 import sys
 import types
 
@@ -178,6 +180,17 @@ def revnumerate(sequence):
     for item in reversed(sequence):
         yield idx, item
         idx -= 1
+
+# -----------------------------------------------------------------------------
+def run(cmd):
+    """
+    Run *cmd* in a separate process. Return stdout + stderr.
+    """
+    child = sproc.Popen(shlex.split(cmd),
+                        stdout=sproc.PIPE,
+                        stderr=sproc.STDOUT)
+    (out, _) = child.communicate()
+    return out
 
 # -----------------------------------------------------------------------------
 class Error(Exception):
