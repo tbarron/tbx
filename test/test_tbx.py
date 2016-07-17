@@ -45,7 +45,7 @@ def test_chdir_rug(tmpdir):
     with tbx.chdir(rug.strpath):
         shutil.rmtree(rug.dirname)
         with pytest.raises(OSError) as err:
-            with os.chdir('..'):
+            with tbx.chdir('..'):
                 assert os.getcwd() == origin
         assert 'No such file or directory' in str(err)
         with pytest.raises(OSError) as err:
