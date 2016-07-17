@@ -1,6 +1,7 @@
 """
 Tests for module tbx
 """
+# pylint: disable=locally-disabled
 import os
 import re
 import shutil

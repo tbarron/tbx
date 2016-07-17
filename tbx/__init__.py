@@ -1,6 +1,8 @@
 """
 Toolbox
 """
+# pylint: disable=locally-disabled
+# pylint: disable=misplaced-comparison-constant
 import contextlib
 import os
 import re
