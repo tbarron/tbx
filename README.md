@@ -18,6 +18,10 @@
     * Return the directory parent of *path*. If *level* is something
       other 1, *level* path components are removed from the path.
 
+ * dispatch(mname, prefix, args)
+    * Introspect module *mname* for a callable named *prefix*_*args[0]*. If
+      found, call it with arguments *args[1:]*
+
  * envset
     * Context manager that sets one or more environment variables,
       returning them to their original values when control leaves the
