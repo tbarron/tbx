@@ -3,9 +3,7 @@ Tests for module tbx
 """
 import os
 import re
-import shlex
 import shutil
-import subprocess as sproc
 
 import pytest
 
@@ -426,8 +424,5 @@ def test_zlint():
     """
     Run pylint on the payload and test code
     """
-    try:
-        result = sproc.check_output(shlex.split('pylint -rn tbx test'))
-    except sproc.CalledProcessError as err:
-        assert err.output == ''
+    result = tbx.run('pylint -rn tbx test')
     assert result == ''
