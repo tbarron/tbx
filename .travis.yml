@@ -20,7 +20,7 @@ install:
  - "git config --global user.email \"travis-user@example.com\""
  - "git config --global user.name \"Travis Userq\""
  - "echo \"[MASTER]\" > .pylintrc"
- - "echo \"disable=locally-disabled\" >> .pylintrc"
+ - "echo \"disable=locally-disabled,locally-enabled\" >> .pylintrc"
 
 # command to run tests, e.g. python setup.py test
 # script: tox
