@@ -4,6 +4,7 @@ Tests for module tbx
 import os
 import re
 import shutil
+import sys
 
 import pytest
 
@@ -420,6 +421,7 @@ def test_fatal_number():
     assert str(msg) in str(err)
 
 # -----------------------------------------------------------------------------
+@pytest.mark.skipif(sys.version_info < (2, 7), reason="pylint requires 2.7")
 def test_zlint():
     """
     Run pylint on the payload and test code
