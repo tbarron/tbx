@@ -24,7 +24,7 @@ install:
 # command to run tests, e.g. python setup.py test
 # script: tox
 script:
- - py.test -v --skip pylint
+ - py.test -vv --skip pylint
 
 # addons:
 #   apt:
