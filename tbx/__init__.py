@@ -15,8 +15,8 @@ def chdir(directory):
 
     When the with statement ends, you're back where you started.
     """
+    origin = os.getcwd()
     try:
-        origin = os.getcwd()
         os.chdir(directory)
         yield
 
