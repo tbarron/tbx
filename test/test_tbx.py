@@ -410,6 +410,154 @@ def test_revnumerate():
         pidx = idx
 
 # -----------------------------------------------------------------------------
+def test_run_noargs():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.dbgfunc()
+    with pytest.raises(TypeError) as err:
+         # pylint: disable=no-value-for-parameter
+        tbx.run()
+    assert 'run() takes' in str(err)
+    assert 'argument' in str(err)
+
+# -----------------------------------------------------------------------------
+def test_run_cmd(rdata):
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.dbgfunc()
+    result = tbx.run("python -c 'import this'")
+    for item in rdata.exp:
+        assert item in result
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_istr():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # result = tbx.run('python', input='import this\n')
+    # for item in rdata.exp:
+    #     assert item in result
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_istrio():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ipath():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_icmd():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ifd():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ifobj():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ostr():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ostrio():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_opath():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ocmd():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ofd():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ofobj():
+    """
+    tbx.run(cmd,
+            input={str, StringIO, '< path', '| cmd', fd, fileobj},
+            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    """
+    pytest.skip()
+    # tbx.run()
+
+# -----------------------------------------------------------------------------
 @pytest.mark.skipif(sys.version_info < (2, 7), reason="pylint requires 2.7")
 def test_zlint():
     """
