@@ -124,7 +124,7 @@ def test_contents_badperm(ctest):
     """
     Calling contents on a file that is not readable with throw an exception
     """
-    # pytest.skip('construction')
+    pytest.dbgfunc()
     ctest.data.chmod(0000)
     with pytest.raises(tbx.Error) as err:
         _ = tbx.contents(ctest.data.strpath, fmt=str, sep=r'\s')
