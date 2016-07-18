@@ -439,7 +439,9 @@ def get_this():
     buf = StringIO.StringIO('w')
     orig = sys.stdout
     sys.stdout = buf
+    # pylint: disable=unused-variable
     import this
+    # pylint: enable=unused-variable
     sys.stdout = orig
     return buf.getvalue()
 
