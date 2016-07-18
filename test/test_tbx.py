@@ -6,6 +6,7 @@ Tests for module tbx
 import os
 import re
 import shutil
+import StringIO
 import sys
 
 import pytest
@@ -429,3 +430,25 @@ def ctest(tmpdir):
                            'frumple'])
     ctest.data.write(ctest.exp)
     return ctest
+
+# -----------------------------------------------------------------------------
+def get_this():
+    """
+    return The Zen of Python as a string
+    """
+    buf = StringIO.StringIO('w')
+    orig = sys.stdout
+    sys.stdout = buf
+    import this
+    sys.stdout = orig
+    return buf.getvalue()
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def rdata():
+    """
+    Set up for run tests
+    """
+    zen = get_this()
+    rdata.exp = [_ for _ in zen.split('\n') if _ != '']
+    return rdata
