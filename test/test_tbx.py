@@ -465,14 +465,17 @@ def test_run_cmd_ipath(rdata, tmpdir):
         assert item in result
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_icmd():
+def test_run_cmd_icmd(rdata):
     """
     tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+            input={str, StringIO, '< path', 'cmd |', fd, fileobj},
+            output={str, StringIO, '> path', '| cmd', fd, fileobj})
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    icmd = "echo 'import this' |"
+    result = tbx.run('python', input=icmd)
+    for item in rdata.exp:
+        assert item in result
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ifd():

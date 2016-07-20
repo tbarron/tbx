@@ -186,6 +186,7 @@ def revnumerate(sequence):
 
 # -----------------------------------------------------------------------------
 # pylint: disable=redefined-builtin
+# pylint: disable=no-member
 def run(cmd, input=None):
     """
     Run *cmd* in a separate process. Return stdout + stderr.
@@ -200,6 +201,9 @@ def run(cmd, input=None):
     elif isinstance(input, str):
         if input.strip().startswith('<'):
             input = contents(input.strip()[1:].strip())
+        elif input.strip().endswith('|'):
+            cmd = input.strip()[:-1].strip()
+            input = run(cmd)
 
     child = sproc.Popen(posarg, **kwa)
     (out, _) = child.communicate(input)
