@@ -453,14 +453,16 @@ def test_run_cmd_istrio(rdata):
         assert item in result
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_ipath():
+def test_run_cmd_ipath(rdata, tmpdir):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, '< path')
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    input_file = tmpdir.join('script')
+    input_file.write('import this\n')
+    result = tbx.run('python', input='< {0}'.format(input_file))
+    for item in rdata.exp:
+        assert item in result
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_icmd():

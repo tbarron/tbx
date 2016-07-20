@@ -197,9 +197,11 @@ def run(cmd, input=None):
 
     if isinstance(input, StringIO.StringIO):
         input = input.getvalue()
+    elif isinstance(input, str):
+        if input.strip().startswith('<'):
+            input = contents(input.strip()[1:].strip())
 
     child = sproc.Popen(posarg, **kwa)
-
     (out, _) = child.communicate(input)
     return out
 
