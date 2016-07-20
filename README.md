@@ -22,9 +22,32 @@
     * Introspect module *mname* for a callable named *prefix*_*args[0]*. If
       found, call it with arguments *args[1:]*
 
- * envset
+ * dispatch_help(mname, prefix, args)
+    * Introspect module *mname* and print help info from __doc__
+      strings for callables with names [*prefix*_foo for foo in args].
+      If *args* is empty, print the first line of each __doc__ for all
+      the callables in the module whose name begins with *prefix*
+
+ * envset(VARNAME=VALUE, ...)
     * Context manager that sets one or more environment variables,
       returning them to their original values when control leaves the
       context.
 
- * 
+      with envset(PATH='somewhere:else'):
+          ... do stuff with alternate $PATH ...
+      # $PATH is back to its original value
+
+ * fatal(msg)
+    * Print *msg* and exit the process
+
+ * revnumerate(sequence)
+    * Enumerate *sequence* in reverse. The numbers count down from
+      len(*sequence*)-1 to 0
+
+ * run(cmd, input={str|StringIO|fd|file},
+            output={str|StringIO|fd|file})
+    * If *input* (or *output*) is a str that begins with '<', the path
+      named in the argument will be read and its contents will be
+      written to stdin of the command. If a str *input* ends with '|'
+      the argument will be run as a command and its output will be
+      written to stdin of the payload command.
