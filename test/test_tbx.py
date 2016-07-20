@@ -443,14 +443,14 @@ def test_run_cmd_istr(rdata):
         assert item in result
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_istrio():
+def test_run_cmd_istrio(rdata):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, input=StringIO)
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    result = tbx.run('python', input=StringIO.StringIO('import this\n'))
+    for item in rdata.exp:
+        assert item in result
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ipath():

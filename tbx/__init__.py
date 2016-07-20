@@ -7,6 +7,7 @@ import contextlib
 import os
 import re
 import shlex
+import StringIO
 import subprocess as sproc
 import sys
 import types
@@ -193,6 +194,9 @@ def run(cmd, input=None):
     kwa = {'stdin': sproc.PIPE,
            'stdout': sproc.PIPE,
            'stderr': sproc.STDOUT}
+
+    if isinstance(input, StringIO.StringIO):
+        input = input.getvalue()
 
     child = sproc.Popen(posarg, **kwa)
 
