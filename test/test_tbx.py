@@ -433,16 +433,14 @@ def test_run_cmd(rdata):
         assert item in result
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_istr():
+def test_run_cmd_istr(rdata):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, input=str)
     """
-    pytest.skip()
-    # result = tbx.run('python', input='import this\n')
-    # for item in rdata.exp:
-    #     assert item in result
+    pytest.dbgfunc()
+    result = tbx.run('python', input='import this\n')
+    for item in rdata.exp:
+        assert item in result
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_istrio():
