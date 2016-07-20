@@ -184,14 +184,19 @@ def revnumerate(sequence):
         idx -= 1
 
 # -----------------------------------------------------------------------------
-def run(cmd):
+# pylint: disable=redefined-builtin
+def run(cmd, input=None):
     """
     Run *cmd* in a separate process. Return stdout + stderr.
     """
-    child = sproc.Popen(shlex.split(cmd),
-                        stdout=sproc.PIPE,
-                        stderr=sproc.STDOUT)
-    (out, _) = child.communicate()
+    posarg = shlex.split(cmd)
+    kwa = {'stdin': sproc.PIPE,
+           'stdout': sproc.PIPE,
+           'stderr': sproc.STDOUT}
+
+    child = sproc.Popen(posarg, **kwa)
+
+    (out, _) = child.communicate(input)
     return out
 
 # -----------------------------------------------------------------------------
