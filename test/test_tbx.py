@@ -412,9 +412,7 @@ def test_revnumerate():
 # -----------------------------------------------------------------------------
 def test_run_noargs():
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    Without arguments, tbx.run() should throw a TypeError exception
     """
     pytest.dbgfunc()
     with pytest.raises(TypeError) as err:
@@ -426,9 +424,8 @@ def test_run_noargs():
 # -----------------------------------------------------------------------------
 def test_run_cmd(rdata):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    With just a command (*cmd*), tbx.run() should run the command and return
+    its stdout + stderr
     """
     pytest.dbgfunc()
     result = tbx.run("python -c 'import this'")
