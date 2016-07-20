@@ -581,14 +581,19 @@ def get_this():
     """
     return The Zen of Python as a string
     """
-    buf = StringIO.StringIO('w')
-    orig = sys.stdout
-    sys.stdout = buf
-    # pylint: disable=unused-variable
-    import this
-    # pylint: enable=unused-variable
-    sys.stdout = orig
-    return buf.getvalue()
+    while True:
+        try:
+            rval = get_this.zen
+            return rval
+        except AttributeError:
+            buf = StringIO.StringIO('w')
+            orig = sys.stdout
+            sys.stdout = buf
+            # pylint: disable=unused-variable
+            import this
+            # pylint: enable=unused-variable
+            sys.stdout = orig
+            get_this.zen = buf.getvalue()
 
 # -----------------------------------------------------------------------------
 @pytest.fixture
