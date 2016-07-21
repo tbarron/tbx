@@ -204,6 +204,9 @@ def run(cmd, input=None):
         elif input.strip().endswith('|'):
             cmd = input.strip()[:-1].strip()
             input = run(cmd)
+    elif isinstance(input, int):
+        kwa['stdin'] = input
+        input = None
 
     child = sproc.Popen(posarg, **kwa)
     (out, _) = child.communicate(input)

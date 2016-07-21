@@ -455,7 +455,7 @@ def test_run_cmd_istrio(rdata):
 # -----------------------------------------------------------------------------
 def test_run_cmd_ipath(rdata, tmpdir):
     """
-    tbx.run(cmd, '< path')
+    tbx.run(cmd, input='< path')
     """
     pytest.dbgfunc()
     input_file = tmpdir.join('script')
@@ -467,9 +467,7 @@ def test_run_cmd_ipath(rdata, tmpdir):
 # -----------------------------------------------------------------------------
 def test_run_cmd_icmd(rdata):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', 'cmd |', fd, fileobj},
-            output={str, StringIO, '> path', '| cmd', fd, fileobj})
+    tbx.run(cmd, input='cmd |')
     """
     pytest.dbgfunc()
     icmd = "echo 'import this' |"
@@ -478,14 +476,18 @@ def test_run_cmd_icmd(rdata):
         assert item in result
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_ifd():
+def test_run_cmd_ifd(rdata, tmpdir):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, input=fd)
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    infile = tmpdir.join('infile')
+    infile.write('import this\n')
+    fobj = infile.open(mode='r')
+    fnum = fobj.fileno()
+    result = tbx.run('python', input=fnum)
+    for item in rdata.exp:
+        assert item in result
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ifobj():
