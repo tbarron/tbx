@@ -505,12 +505,27 @@ def test_run_cmd_ifobj(rdata, tmpdir):
 # -----------------------------------------------------------------------------
 def test_run_cmd_ostr():
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, output='foobar')
+        should raise error -- '>' or '|' required
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    with pytest.raises(tbx.Error) as err:
+        tbx.run('python -c "import this"', output='foobar')
+    assert '| or > required for string output' in str(err)
+
+# -----------------------------------------------------------------------------
+def test_run_cmd_ostr_redir(rdata, tmpdir):
+    """
+    tbx.run(cmd, output='> foobar')
+        should write data to foobar
+    """
+    pytest.dbgfunc()
+    outfile = tmpdir.join('outfile')
+    target = '> ' + outfile.strpath
+    tbx.run('python -c "import this"', output=target)
+    result = outfile.read()
+    for item in rdata.exp:
+        assert item in result
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ostrio():
