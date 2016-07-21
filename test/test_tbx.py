@@ -490,14 +490,17 @@ def test_run_cmd_ifd(rdata, tmpdir):
         assert item in result
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_ifobj():
+def test_run_cmd_ifobj(rdata, tmpdir):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, input=open(filename, 'r'))
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    infile = tmpdir.join('infile')
+    infile.write('import this\n')
+    fobj = infile.open(mode='r')
+    result = tbx.run('python', input=fobj)
+    for item in rdata.exp:
+        assert item in result
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ostr():

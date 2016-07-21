@@ -200,11 +200,15 @@ def run(cmd, input=None):
         input = input.getvalue()
     elif isinstance(input, str):
         if input.strip().startswith('<'):
-            input = contents(input.strip()[1:].strip())
+            kwa['stdin'] = open(input.strip()[1:].strip())
+            input = None
         elif input.strip().endswith('|'):
             cmd = input.strip()[:-1].strip()
             input = run(cmd)
     elif isinstance(input, int):
+        kwa['stdin'] = input
+        input = None
+    elif isinstance(input, file):
         kwa['stdin'] = input
         input = None
 
