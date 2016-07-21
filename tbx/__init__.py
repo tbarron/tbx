@@ -227,6 +227,11 @@ def run(cmd, input=None, output=None):
 
     child = sproc.Popen(posarg, **kwa)
     (out, _) = child.communicate(input)
+
+    if isinstance(output, StringIO.StringIO):
+        output.write(out)
+        out = ''
+
     return out
 
 

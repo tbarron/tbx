@@ -567,14 +567,19 @@ def test_run_cmd_ostr_redir(rdata, tmpdir):
 
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_ostrio():
+def test_run_cmd_ostrio(rdata):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, output=StringIO)
+        output should wind up in the StringIO object
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    outstr = StringIO.StringIO()
+    rval = tbx.run('python -c "import this"', output=outstr)
+    assert rval == ''
+    result = outstr.getvalue()
+    for item in rdata.exp:
+        assert item in result
+
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_opath():
