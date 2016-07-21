@@ -575,21 +575,27 @@ def test_run_cmd_ostrio(rdata):
     pytest.dbgfunc()
     outstr = StringIO.StringIO()
     rval = tbx.run('python -c "import this"', output=outstr)
-    assert rval == ''
+    assert rval is None
     result = outstr.getvalue()
     for item in rdata.exp:
         assert item in result
 
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_opath():
+def test_run_cmd_opath(rdata, tmpdir):
     """
     tbx.run(cmd,
             input={str, StringIO, '< path', '| cmd', fd, fileobj},
             output={str, StringIO, '> path', 'cmd |', fd, fileobj})
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    outfile = tmpdir.join('outfile')
+    rval = tbx.run('python -c "import this"',
+                   output="> {0}".format(outfile.strpath))
+    assert rval is None
+    result = outfile.read()
+    for item in rdata.exp:
+        assert item in result
 
 
 # -----------------------------------------------------------------------------

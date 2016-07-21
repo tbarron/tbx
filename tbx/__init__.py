@@ -230,7 +230,7 @@ def run(cmd, input=None, output=None):
 
     if isinstance(output, StringIO.StringIO):
         output.write(out)
-        out = ''
+        out = None
 
     return out
 
