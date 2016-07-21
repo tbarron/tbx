@@ -1,8 +1,6 @@
 """
 Tests for module tbx
 """
-# pylint: disable=locally-disabled
-# pylint: disable=redefined-outer-name
 import os
 import re
 import shutil
@@ -12,6 +10,7 @@ import sys
 import pytest
 
 import tbx
+
 
 # -----------------------------------------------------------------------------
 def test_chdir_good(tmpdir):
@@ -24,6 +23,7 @@ def test_chdir_good(tmpdir):
         assert os.getcwd() == tmpdir.strpath
     assert orig == os.getcwd()
 
+
 # -----------------------------------------------------------------------------
 def test_chdir_nosuchdir(tmpdir):
     """
@@ -35,6 +35,7 @@ def test_chdir_nosuchdir(tmpdir):
         with tbx.chdir(nosuch.strpath):
             assert os.getcwd() == tmpdir.strpath
     assert 'No such file or directory' in str(err)
+
 
 # -----------------------------------------------------------------------------
 def test_chdir_rug(tmpdir):
@@ -56,6 +57,7 @@ def test_chdir_rug(tmpdir):
     assert os.getcwd() == origin
     assert 'No such file or directory' in str(err)
 
+
 # -----------------------------------------------------------------------------
 def test_contents_nosuch_default(ctest):
     """
@@ -67,6 +69,7 @@ def test_contents_nosuch_default(ctest):
     result = tbx.contents(filename,
                           default='foobar')
     assert result == 'foobar'
+
 
 # -----------------------------------------------------------------------------
 def test_contents_nosuch_nodefault(ctest):
@@ -81,6 +84,7 @@ def test_contents_nosuch_nodefault(ctest):
     assert "No such file or directory" in str(err)
     assert filename in str(err)
 
+
 # -----------------------------------------------------------------------------
 def test_contents_good_str(ctest):
     """
@@ -90,6 +94,7 @@ def test_contents_good_str(ctest):
     result = tbx.contents(ctest.data.strpath)
     assert result == ctest.exp
 
+
 # -----------------------------------------------------------------------------
 def test_contents_good_list(ctest):
     """
@@ -98,6 +103,7 @@ def test_contents_good_list(ctest):
     pytest.dbgfunc()
     result = tbx.contents(ctest.data.strpath, fmt='list')
     assert result == ctest.exp.split('\n')
+
 
 # -----------------------------------------------------------------------------
 def test_contents_good_altsep(ctest):
@@ -109,6 +115,7 @@ def test_contents_good_altsep(ctest):
     assert len(result) == len(re.split(r'\s', ctest.exp))
     assert result == re.split(r'\s', ctest.exp)
 
+
 # -----------------------------------------------------------------------------
 def test_contents_badfmt(ctest):
     """
@@ -118,6 +125,7 @@ def test_contents_badfmt(ctest):
     with pytest.raises(tbx.Error) as err:
         _ = tbx.contents(ctest.data.strpath, fmt='str', sep=r'\s')
     assert 'Non-default separator is only valid for list format' in str(err)
+
 
 # -----------------------------------------------------------------------------
 def test_contents_badperm(ctest):
@@ -129,6 +137,7 @@ def test_contents_badperm(ctest):
     with pytest.raises(tbx.Error) as err:
         _ = tbx.contents(ctest.data.strpath, fmt=str, sep=r'\s')
     assert "Can't read file {0}".format(ctest.data.strpath) in str(err)
+
 
 # -----------------------------------------------------------------------------
 @pytest.mark.parametrize('level', [0, 1, 2, None])
@@ -147,6 +156,7 @@ def test_dirname(level):
     result = tbx.dirname(inp, level=level)
     assert result == exp
 
+
 # -----------------------------------------------------------------------------
 def test_dispatch_help_good(capsys):
     """
@@ -157,6 +167,7 @@ def test_dispatch_help_good(capsys):
     tbx.dispatch_help(__name__, 'dtst', ['foobar'])
     out, _ = capsys.readouterr()
     assert exp in out
+
 
 # -----------------------------------------------------------------------------
 def test_dispatch_help_help(capsys):
@@ -170,6 +181,7 @@ def test_dispatch_help_help(capsys):
     tbx.dispatch_help(__name__, 'dtst', ['help'])
     out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
+
 
 # -----------------------------------------------------------------------------
 def test_dispatch_help_multiple(capsys):
@@ -185,6 +197,7 @@ def test_dispatch_help_multiple(capsys):
     out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
 
+
 # -----------------------------------------------------------------------------
 def test_dispatch_help_noargs(capsys):
     """
@@ -197,6 +210,7 @@ def test_dispatch_help_noargs(capsys):
     out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
 
+
 # -----------------------------------------------------------------------------
 def test_dispatch_help_nodoc():
     """
@@ -207,6 +221,7 @@ def test_dispatch_help_nodoc():
     with pytest.raises(SystemExit) as err:
         tbx.dispatch_help(__name__, 'xtst', ['undocumented'])
     assert exp in str(err)
+
 
 # -----------------------------------------------------------------------------
 def test_dispatch_help_nomodule():
@@ -219,6 +234,7 @@ def test_dispatch_help_nomodule():
         tbx.dispatch('x' + __name__, 'foo', ['help', 'nosuch'])
     assert exp in str(err)
 
+
 # -----------------------------------------------------------------------------
 def test_dispatch_help_nopfx():
     """
@@ -230,6 +246,7 @@ def test_dispatch_help_nopfx():
         tbx.dispatch(__name__, args=['help', 'nosuch'])
     assert exp in str(err)
 
+
 # -----------------------------------------------------------------------------
 def test_dispatch_help_nosuch():
     """
@@ -240,6 +257,7 @@ def test_dispatch_help_nosuch():
     with pytest.raises(SystemExit) as err:
         tbx.dispatch(__name__, 'foo', ['help', 'nosuch'])
     assert exp in str(err)
+
 
 # -----------------------------------------------------------------------------
 def test_dispatch_bad(capsys):
@@ -254,6 +272,7 @@ def test_dispatch_bad(capsys):
     out, err = capsys.readouterr()
     assert out == ''
 
+
 # -----------------------------------------------------------------------------
 def test_dispatch_good(capsys):
     """
@@ -266,17 +285,18 @@ def test_dispatch_good(capsys):
     exp = "This is foobar: {0}".format(', '.join([str(_) for _ in argl[1:]]))
     assert exp in out
 
+
 # -----------------------------------------------------------------------------
 def dtst_foobar(*args):
     """foobar - print a comma delimited argument list
     """
     print "This is foobar: {0}".format(", ".join([str(_) for _ in args]))
 
+
 # -----------------------------------------------------------------------------
-# pylint: disable=missing-docstring,unused-argument
 def xtst_undocumented(*args):
     print "This is undocumented"
-# pylint: enable=missing-docstring,unused-argument
+
 
 # -----------------------------------------------------------------------------
 def test_envset_new_1():
@@ -288,6 +308,7 @@ def test_envset_new_1():
     with tbx.envset(TEST_ENVSET='foobar'):
         assert os.getenv('TEST_ENVSET') == 'foobar'
     assert os.getenv('TEST_ENVSET') is None
+
 
 # -----------------------------------------------------------------------------
 def test_envset_new_2():
@@ -305,6 +326,7 @@ def test_envset_new_2():
     assert os.getenv('TEST_ENVSET') is None
     assert os.getenv('TEST_ENVSET_2') is None
 
+
 # -----------------------------------------------------------------------------
 def test_envset_old_1():
     """
@@ -315,6 +337,7 @@ def test_envset_old_1():
     with tbx.envset(HOME='/somewhere/over/the/rainbow'):
         assert os.getenv('HOME') == '/somewhere/over/the/rainbow'
     assert os.getenv('HOME') == orig
+
 
 # -----------------------------------------------------------------------------
 def test_envset_old_2():
@@ -332,6 +355,7 @@ def test_envset_old_2():
     assert os.getenv('HOME') == orig['HOME']
     assert os.getenv('TERM') == orig['TERM']
 
+
 # -----------------------------------------------------------------------------
 def test_envset_rm():
     """
@@ -345,6 +369,7 @@ def test_envset_rm():
         assert os.getenv(vname) is None
     assert os.getenv(vname) == origval
     del os.environ[vname]
+
 
 # -----------------------------------------------------------------------------
 def test_envset_rmset():
@@ -365,6 +390,7 @@ def test_envset_rmset():
     for key in keys:
         del os.environ[key]
 
+
 # -----------------------------------------------------------------------------
 def test_fatal_empty():
     """
@@ -374,6 +400,7 @@ def test_fatal_empty():
     with pytest.raises(SystemExit) as err:
         tbx.fatal()
     assert exp in str(err)
+
 
 # -----------------------------------------------------------------------------
 def test_fatal_msg():
@@ -385,6 +412,7 @@ def test_fatal_msg():
         tbx.fatal(msg)
     assert msg in str(err)
 
+
 # -----------------------------------------------------------------------------
 def test_fatal_number():
     """
@@ -394,6 +422,7 @@ def test_fatal_number():
     with pytest.raises(SystemExit) as err:
         tbx.fatal(msg)
     assert str(msg) in str(err)
+
 
 # -----------------------------------------------------------------------------
 def test_revnumerate():
@@ -409,6 +438,7 @@ def test_revnumerate():
             assert item == data[idx]
         pidx = idx
 
+
 # -----------------------------------------------------------------------------
 def test_run_noargs():
     """
@@ -416,10 +446,10 @@ def test_run_noargs():
     """
     pytest.dbgfunc()
     with pytest.raises(TypeError) as err:
-         # pylint: disable=no-value-for-parameter
         tbx.run()
     assert 'run() takes' in str(err)
     assert 'argument' in str(err)
+
 
 # -----------------------------------------------------------------------------
 def test_run_cmd(rdata):
@@ -432,6 +462,7 @@ def test_run_cmd(rdata):
     for item in rdata.exp:
         assert item in result
 
+
 # -----------------------------------------------------------------------------
 def test_run_cmd_istr(rdata):
     """
@@ -442,6 +473,7 @@ def test_run_cmd_istr(rdata):
     for item in rdata.exp:
         assert item in result
 
+
 # -----------------------------------------------------------------------------
 def test_run_cmd_istrio(rdata):
     """
@@ -451,6 +483,7 @@ def test_run_cmd_istrio(rdata):
     result = tbx.run('python', input=StringIO.StringIO('import this\n'))
     for item in rdata.exp:
         assert item in result
+
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ipath(rdata, tmpdir):
@@ -464,6 +497,7 @@ def test_run_cmd_ipath(rdata, tmpdir):
     for item in rdata.exp:
         assert item in result
 
+
 # -----------------------------------------------------------------------------
 def test_run_cmd_icmd(rdata):
     """
@@ -474,6 +508,7 @@ def test_run_cmd_icmd(rdata):
     result = tbx.run('python', input=icmd)
     for item in rdata.exp:
         assert item in result
+
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ifd(rdata, tmpdir):
@@ -489,6 +524,7 @@ def test_run_cmd_ifd(rdata, tmpdir):
     for item in rdata.exp:
         assert item in result
 
+
 # -----------------------------------------------------------------------------
 def test_run_cmd_ifobj(rdata, tmpdir):
     """
@@ -502,6 +538,7 @@ def test_run_cmd_ifobj(rdata, tmpdir):
     for item in rdata.exp:
         assert item in result
 
+
 # -----------------------------------------------------------------------------
 def test_run_cmd_ostr():
     """
@@ -512,6 +549,7 @@ def test_run_cmd_ostr():
     with pytest.raises(tbx.Error) as err:
         tbx.run('python -c "import this"', output='foobar')
     assert '| or > required for string output' in str(err)
+
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ostr_redir(rdata, tmpdir):
@@ -526,6 +564,7 @@ def test_run_cmd_ostr_redir(rdata, tmpdir):
     result = outfile.read()
     for item in rdata.exp:
         assert item in result
+
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ostrio():
@@ -547,6 +586,7 @@ def test_run_cmd_opath():
     pytest.skip()
     # tbx.run()
 
+
 # -----------------------------------------------------------------------------
 def test_run_cmd_ocmd():
     """
@@ -556,6 +596,7 @@ def test_run_cmd_ocmd():
     """
     pytest.skip()
     # tbx.run()
+
 
 # -----------------------------------------------------------------------------
 def test_run_cmd_ofd():
@@ -567,6 +608,7 @@ def test_run_cmd_ofd():
     pytest.skip()
     # tbx.run()
 
+
 # -----------------------------------------------------------------------------
 def test_run_cmd_ofobj():
     """
@@ -577,14 +619,16 @@ def test_run_cmd_ofobj():
     pytest.skip()
     # tbx.run()
 
+
 # -----------------------------------------------------------------------------
-@pytest.mark.skipif(sys.version_info < (2, 7), reason="pylint requires 2.7")
+# @pytest.mark.skipif(sys.version_info < (2, 7), reason="pylint requires 2.7")
 def test_zlint():
     """
-    Run pylint on the payload and test code
+    Run flake8 on the payload and test code
     """
-    result = tbx.run('pylint -rn tbx test')
+    result = tbx.run('flake8 tbx test')
     assert result == ''
+
 
 # -----------------------------------------------------------------------------
 @pytest.fixture
@@ -599,6 +643,7 @@ def ctest(tmpdir):
     ctest.data.write(ctest.exp)
     return ctest
 
+
 # -----------------------------------------------------------------------------
 def get_this():
     """
@@ -612,11 +657,10 @@ def get_this():
             buf = StringIO.StringIO('w')
             orig = sys.stdout
             sys.stdout = buf
-            # pylint: disable=unused-variable
-            import this
-            # pylint: enable=unused-variable
+            import this    # noqa
             sys.stdout = orig
             get_this.zen = buf.getvalue()
+
 
 # -----------------------------------------------------------------------------
 @pytest.fixture
