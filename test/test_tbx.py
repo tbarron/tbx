@@ -612,23 +612,34 @@ def test_run_cmd_ocmd():
 # -----------------------------------------------------------------------------
 def test_run_cmd_ofd():
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, output=fd)
+        should write output into file open on fd
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    outfile = tmpdir.join('outfile')
+    fobj = open(outfile.strpath, 'w')
+    fnum = fobj.fileno()
+    rval = tbx.run('python -c "import this"', output=fnum)
+    assert rval is None
+    result = outfile.read()
+    for item in rdata.exp:
+        assert item in result
 
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_ofobj():
+def test_run_cmd_ofobj(rdata, tmpdir):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd, output=fileobj)
+        should write output into fileobj
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    outfile = tmpdir.join('outfile')
+    rval = tbx.run('python -c "import this"',
+                   output=open(outfile.strpath, 'w'))
+    assert rval is None
+    result = outfile.read()
+    for item in rdata.exp:
+        assert item in result
 
 
 # -----------------------------------------------------------------------------
