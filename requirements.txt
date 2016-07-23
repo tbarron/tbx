@@ -1,2 +1,2 @@
 pexpect
-pylint
+flake8
