@@ -226,6 +226,8 @@ def run(cmd, input=None, output=None):
             raise Error('| or > required for string output')
     elif isinstance(output, file):
         kwa['stdout'] = output
+    elif isinstance(output, int):
+        kwa['stdout'] = output
 
     child = sproc.Popen(posarg, **kwa)
     (out, _) = child.communicate(input)
@@ -234,6 +236,8 @@ def run(cmd, input=None, output=None):
         output.write(out)
         out = None
     elif isinstance(output, file):
+        out = None
+    elif isinstance(output, int):
         out = None
 
     return out

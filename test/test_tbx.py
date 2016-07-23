@@ -610,7 +610,7 @@ def test_run_cmd_ocmd():
 
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_ofd():
+def test_run_cmd_ofd(rdata, tmpdir):
     """
     tbx.run(cmd, output=fd)
         should write output into file open on fd
