@@ -7,6 +7,7 @@ import sys
 
 import pytest
 
+
 # -----------------------------------------------------------------------------
 def pytest_addoption(parser):
     """
@@ -20,6 +21,7 @@ def pytest_addoption(parser):
     parser.addoption("--skip", action="append", default=[],
                      help="skip named test(s)")
     sys.path.append(os.getcwd())
+
 
 # -----------------------------------------------------------------------------
 def pytest_configure(config):
@@ -35,6 +37,7 @@ def pytest_configure(config):
     # it off.
     if config.option.all and config.option.exitfirst:
         config.option.exitfirst = False
+
 
 # -----------------------------------------------------------------------------
 def pytest_runtest_setup(item):

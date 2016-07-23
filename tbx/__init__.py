@@ -1,8 +1,6 @@
 """
 Toolbox
 """
-# pylint: disable=locally-disabled
-# pylint: disable=misplaced-comparison-constant
 import contextlib
 import os
 import re
@@ -10,7 +8,7 @@ import shlex
 import StringIO
 import subprocess as sproc
 import sys
-import types
+
 
 # -----------------------------------------------------------------------------
 @contextlib.contextmanager
@@ -27,6 +25,7 @@ def chdir(directory):
 
     finally:
         os.chdir(origin)
+
 
 # -----------------------------------------------------------------------------
 def contents(name=None, default=None, fmt='str', sep=None):
@@ -54,6 +53,7 @@ def contents(name=None, default=None, fmt='str', sep=None):
         raise Error('Invalid format')
     return rval
 
+
 # -----------------------------------------------------------------------------
 def dirname(path, level=None):
     """
@@ -65,6 +65,7 @@ def dirname(path, level=None):
     for _ in range(0, level):
         rval = os.path.dirname(rval)
     return rval
+
 
 # -----------------------------------------------------------------------------
 def dispatch(mname='__main__', prefix=None, args=None):
@@ -90,6 +91,7 @@ def dispatch(mname='__main__', prefix=None, args=None):
         func(*tuple(args[1:]))
     except AttributeError:
         fatal("Module {0} has no function {1}".format(mname, func_name))
+
 
 # -----------------------------------------------------------------------------
 def dispatch_help(mname='__main__', prefix=None, args=None):
@@ -118,11 +120,12 @@ def dispatch_help(mname='__main__', prefix=None, args=None):
             if topic == 'help':
                 print("\n".join(["help - show a list of available commands",
                                  "",
-                                 "   With no arguments, show a list of commands",
-                                 "   With a command as argument, show help for " +
-                                 "that command",
+                                 "   With no arguments, show a list of "
+                                 "commands",
+                                 "   With a command as argument, show help"
+                                 " for that command",
                                  ""
-                                ]))
+                                 ]))
             else:
                 funcname = '_'.join([prefix, topic])
                 try:
@@ -135,6 +138,7 @@ def dispatch_help(mname='__main__', prefix=None, args=None):
                 else:
                     sys.exit('Function {0} is missing a __doc__ string'
                              ''.format(funcname))
+
 
 @contextlib.contextmanager
 # -----------------------------------------------------------------------------
@@ -167,6 +171,7 @@ def envset(**kwargs):
             elif os.getenv(name) is not None:
                 del os.environ[name]
 
+
 # -----------------------------------------------------------------------------
 def fatal(msg='Fatal error with no reason specified'):
     """
@@ -174,20 +179,20 @@ def fatal(msg='Fatal error with no reason specified'):
     """
     sys.exit(msg)
 
+
 # -----------------------------------------------------------------------------
 def revnumerate(sequence):
     """
     Enumerate *sequence* in reverse
     """
-    idx = len(sequence) -1
+    idx = len(sequence) - 1
     for item in reversed(sequence):
         yield idx, item
         idx -= 1
 
+
 # -----------------------------------------------------------------------------
-# pylint: disable=redefined-builtin
-# pylint: disable=no-member
-def run(cmd, input=None):
+def run(cmd, input=None, output=None):
     """
     Run *cmd* in a separate process. Return stdout + stderr.
     """
@@ -200,14 +205,46 @@ def run(cmd, input=None):
         input = input.getvalue()
     elif isinstance(input, str):
         if input.strip().startswith('<'):
-            input = contents(input.strip()[1:].strip())
+            kwa['stdin'] = open(input.strip()[1:].strip())
+            input = None
         elif input.strip().endswith('|'):
             cmd = input.strip()[:-1].strip()
             input = run(cmd)
+    elif isinstance(input, int):
+        kwa['stdin'] = input
+        input = None
+    elif isinstance(input, file):
+        kwa['stdin'] = input
+        input = None
+
+    if isinstance(output, str):
+        if output.strip().startswith('>'):
+            kwa['stdout'] = open(output.strip()[1:].strip(), 'w')
+        elif output.strip().startswith('|'):
+            pass
+        else:
+            raise Error('| or > required for string output')
+    elif isinstance(output, file):
+        kwa['stdout'] = output
+    elif isinstance(output, int):
+        kwa['stdout'] = output
 
     child = sproc.Popen(posarg, **kwa)
     (out, _) = child.communicate(input)
+
+    if isinstance(output, StringIO.StringIO):
+        output.write(out)
+        out = None
+    elif isinstance(output, file):
+        out = None
+    elif isinstance(output, int):
+        out = None
+    elif isinstance(output, str) and output.strip().startswith('|'):
+        cmd = output.strip()[1:].strip()
+        out = run(cmd, input=out)
+
     return out
+
 
 # -----------------------------------------------------------------------------
 class Error(Exception):
