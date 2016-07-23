@@ -599,14 +599,19 @@ def test_run_cmd_opath(rdata, tmpdir):
 
 
 # -----------------------------------------------------------------------------
-def test_run_cmd_ocmd():
+def test_run_cmd_ocmd(rdata):
     """
-    tbx.run(cmd,
-            input={str, StringIO, '< path', '| cmd', fd, fileobj},
-            output={str, StringIO, '> path', 'cmd |', fd, fileobj})
+    tbx.run(cmd1, '| cmd2')
+        should pipe the output of cmd1 to cmd2
     """
-    pytest.skip()
-    # tbx.run()
+    pytest.dbgfunc()
+    cmd1 = "python -c 'import this'"
+    cmd2 = "grep better"
+    result = tbx.run(cmd1, output='| {0}'.format(cmd2))
+    for item in [_ for _ in rdata.exp if 'better' in _]:
+        assert item in result
+    for item in [_ for _ in rdata.exp if 'better' not in _]:
+        assert item not in result
 
 
 # -----------------------------------------------------------------------------

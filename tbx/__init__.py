@@ -239,6 +239,9 @@ def run(cmd, input=None, output=None):
         out = None
     elif isinstance(output, int):
         out = None
+    elif isinstance(output, str) and output.strip().startswith('|'):
+        cmd = output.strip()[1:].strip()
+        out = run(cmd, input=out)
 
     return out
 
