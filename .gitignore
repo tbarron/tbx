@@ -3,6 +3,9 @@ __pycache__
 pytest.ini
 TODO
 tbx.egg-info
+.coverage*
+.tbx-cov
+.tox
 .#*
 \#*#
 *.pyc

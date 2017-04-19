@@ -1,0 +1,3 @@
+[run]
+source = tbx
+data_file = .tbx-cov
