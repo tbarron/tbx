@@ -1,2 +1,5 @@
-pexpect
+coverage
 flake8
+pexpect
+pytest
+pytest-cov

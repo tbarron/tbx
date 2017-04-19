@@ -332,7 +332,7 @@ def test_envset_old_1():
     """
     Set a single existing environment variable to a new value
     """
-    assert os.getenv('HOME') is not None
+    pytest.dbgfunc()
     orig = os.getenv('HOME')
     with tbx.envset(HOME='/somewhere/over/the/rainbow'):
         assert os.getenv('HOME') == '/somewhere/over/the/rainbow'
@@ -648,7 +648,6 @@ def test_run_cmd_ofobj(rdata, tmpdir):
 
 
 # -----------------------------------------------------------------------------
-# @pytest.mark.skipif(sys.version_info < (2, 7), reason="pylint requires 2.7")
 def test_zlint():
     """
     Run flake8 on the payload and test code

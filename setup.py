@@ -4,8 +4,8 @@ except ImportError:
     from distutils.core import setup
 
 
-with open('README.md') as readme_file:
-    readme = readme_file.read()
+# with open('README.md') as readme_file:
+#     readme = readme_file.read()
 
 # with open('HISTORY.rst') as history_file:
 #     history = history_file.read().replace('.. :changelog:', '')
@@ -22,7 +22,7 @@ setup(
     name='tbx',
     version='0.0.2',
     description="toolbox",
-    long_description=readme,
+    # long_description=readme,
     author="Tom Barron",
     author_email='tusculum@gmail.com',
     url='https://github.com/tbarron/tbx',
@@ -30,6 +30,7 @@ setup(
         'tbx',
     ],
     package_dir={'tbx': 'tbx'},
+    # package_data={'tbx': './README.md'},
     include_package_data=True,
     install_requires=requirements,
     license="ISCL",
