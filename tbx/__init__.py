@@ -196,7 +196,7 @@ def run(cmd, input=None, output=None):
     """
     Run *cmd* in a separate process. Return stdout + stderr.
     """
-    posarg = shlex.split(cmd)
+    posarg = shlex.split(str(cmd))
     kwa = {'stdin': sproc.PIPE,
            'stdout': sproc.PIPE,
            'stderr': sproc.STDOUT}

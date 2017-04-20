@@ -290,12 +290,12 @@ def test_dispatch_good(capsys):
 def dtst_foobar(*args):
     """foobar - print a comma delimited argument list
     """
-    print "This is foobar: {0}".format(", ".join([str(_) for _ in args]))
+    print("This is foobar: {0}".format(", ".join([str(_) for _ in args])))
 
 
 # -----------------------------------------------------------------------------
 def xtst_undocumented(*args):
-    print "This is undocumented"
+    print("This is undocumented")
 
 
 # -----------------------------------------------------------------------------
