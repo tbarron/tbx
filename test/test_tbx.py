@@ -3,12 +3,13 @@ Tests for module tbx
 """
 import os
 import re
+import shlex
 import shutil
 try:
-    import StringIO
+    import StringIO as io
 except ImportError:
     import io
-    StringIO = io.StringIO
+import subprocess as subp
 import sys
 
 import pytest
@@ -451,7 +452,7 @@ def test_run_noargs():
     pytest.dbgfunc()
     with pytest.raises(TypeError) as err:
         tbx.run()
-    assert 'run() takes' in str(err)
+    assert 'run() takes' in str(err) or 'run() missing' in str(err)
     assert 'argument' in str(err)
 
 
@@ -464,7 +465,7 @@ def test_run_cmd(rdata):
     pytest.dbgfunc()
     result = tbx.run("python -c 'import this'")
     for item in rdata.exp:
-        assert item in result
+        assert bytes(item, 'utf8') in result
 
 
 # -----------------------------------------------------------------------------
@@ -475,7 +476,7 @@ def test_run_cmd_istr(rdata):
     pytest.dbgfunc()
     result = tbx.run('python', input='import this\n')
     for item in rdata.exp:
-        assert item in result
+        assert bytes(item, 'utf8') in result
 
 
 # -----------------------------------------------------------------------------
@@ -484,9 +485,9 @@ def test_run_cmd_istrio(rdata):
     tbx.run(cmd, input=StringIO)
     """
     pytest.dbgfunc()
-    result = tbx.run('python', input=StringIO.StringIO('import this\n'))
+    result = tbx.run('python', input=io.StringIO('import this\n'))
     for item in rdata.exp:
-        assert item in result
+        assert bytes(item, 'utf8') in result
 
 
 # -----------------------------------------------------------------------------
@@ -577,7 +578,7 @@ def test_run_cmd_ostrio(rdata):
         output should wind up in the StringIO object
     """
     pytest.dbgfunc()
-    outstr = StringIO.StringIO()
+    outstr = io.StringIO()
     rval = tbx.run('python -c "import this"', output=outstr)
     assert rval is None
     result = outstr.getvalue()
@@ -656,7 +657,9 @@ def test_zlint():
     """
     Run flake8 on the payload and test code
     """
-    result = tbx.run(u'flake8 tbx test')
+    # result = tbx.run(u'flake8 tbx test')
+    result = subp.Popen(shlex.split("flake8 tbx test"),
+                        stdout=subp.PIPE).communicate()[0]
     assert result == ''
 
 
@@ -684,7 +687,7 @@ def get_this():
             rval = get_this.zen
             return rval
         except AttributeError:
-            buf = StringIO.StringIO('w')
+            buf = io.StringIO('w')
             orig = sys.stdout
             sys.stdout = buf
             import this    # noqa

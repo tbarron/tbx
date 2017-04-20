@@ -6,10 +6,10 @@ import os
 import re
 import shlex
 try:
-    import StringIO
+    import StringIO as io
 except ImportError:
     import io
-    StringIO = io.StringIO
+    file = io.TextIOWrapper
 import subprocess as sproc
 import sys
 
@@ -205,15 +205,15 @@ def run(cmd, input=None, output=None):
            'stdout': sproc.PIPE,
            'stderr': sproc.STDOUT}
 
-    if isinstance(input, StringIO.StringIO):
+    if isinstance(input, io.StringIO):
         input = input.getvalue()
     elif isinstance(input, str):
         if input.strip().startswith('<'):
             kwa['stdin'] = open(input.strip()[1:].strip())
             input = None
         elif input.strip().endswith('|'):
-            cmd = input.strip()[:-1].strip()
-            input = run(cmd)
+            scmd = input.strip()[:-1].strip()
+            input = run(scmd)
     elif isinstance(input, int):
         kwa['stdin'] = input
         input = None
@@ -234,9 +234,12 @@ def run(cmd, input=None, output=None):
         kwa['stdout'] = output
 
     child = sproc.Popen(posarg, **kwa)
-    (out, _) = child.communicate(input)
+    if input:
+        (out, _) = child.communicate(bytes(input, 'utf8'))
+    else:
+        (out, _) = child.communicate()
 
-    if isinstance(output, StringIO.StringIO):
+    if isinstance(output, io.StringIO):
         output.write(out)
         out = None
     elif isinstance(output, file):
