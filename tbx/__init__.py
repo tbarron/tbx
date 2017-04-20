@@ -108,12 +108,12 @@ def dispatch_help(mname='__main__', prefix=None, args=None):
     args = args or []
     if len(args) < 1:
         prefix += '_'
-        print "help - show a list of available commands"
+        print("help - show a list of available commands")
         for item in dir(mod):
             if item.startswith(prefix):
                 func = getattr(mod, item)
                 docsum = func.__doc__.split('\n')[0]
-                print docsum
+                print(docsum)
     else:
         while 0 < len(args):
             topic = args.pop(0)
@@ -134,7 +134,7 @@ def dispatch_help(mname='__main__', prefix=None, args=None):
                     sys.exit('Module {0} has no attribute {1}'
                              ''.format(mname, funcname))
                 if func.__doc__:
-                    print func.__doc__
+                    print(func.__doc__)
                 else:
                     sys.exit('Function {0} is missing a __doc__ string'
                              ''.format(funcname))
