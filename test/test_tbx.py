@@ -465,7 +465,7 @@ def test_run_cmd(rdata):
     pytest.dbgfunc()
     result = tbx.run("python -c 'import this'")
     for item in rdata.exp:
-        assert bytes(item, 'utf8') in result
+        check_in(item, result)
 
 
 # -----------------------------------------------------------------------------
@@ -476,7 +476,7 @@ def test_run_cmd_istr(rdata):
     pytest.dbgfunc()
     result = tbx.run('python', input='import this\n')
     for item in rdata.exp:
-        assert bytes(item, 'utf8') in result
+        check_in(item, rdata.exp)
 
 
 # -----------------------------------------------------------------------------
@@ -487,7 +487,7 @@ def test_run_cmd_istrio(rdata):
     pytest.dbgfunc()
     result = tbx.run('python', input=io.StringIO('import this\n'))
     for item in rdata.exp:
-        assert bytes(item, 'utf8') in result
+        check_in(item, result)
 
 
 # -----------------------------------------------------------------------------
@@ -500,7 +500,7 @@ def test_run_cmd_ipath(rdata, tmpdir):
     input_file.write('import this\n')
     result = tbx.run('python', input='< {0}'.format(input_file))
     for item in rdata.exp:
-        assert item in result
+        check_in(item, result)
 
 
 # -----------------------------------------------------------------------------
@@ -512,7 +512,7 @@ def test_run_cmd_icmd(rdata):
     icmd = "echo 'import this' |"
     result = tbx.run('python', input=icmd)
     for item in rdata.exp:
-        assert item in result
+        check_in(item, result)
 
 
 # -----------------------------------------------------------------------------
@@ -527,7 +527,7 @@ def test_run_cmd_ifd(rdata, tmpdir):
     fnum = fobj.fileno()
     result = tbx.run('python', input=fnum)
     for item in rdata.exp:
-        assert item in result
+        check_in(item, result)
 
 
 # -----------------------------------------------------------------------------
@@ -541,7 +541,7 @@ def test_run_cmd_ifobj(rdata, tmpdir):
     fobj = infile.open(mode='r')
     result = tbx.run('python', input=fobj)
     for item in rdata.exp:
-        assert item in result
+        check_in(item, rdata.exp)
 
 
 # -----------------------------------------------------------------------------
@@ -614,9 +614,9 @@ def test_run_cmd_ocmd(rdata):
     cmd2 = "grep better"
     result = tbx.run(cmd1, output='| {0}'.format(cmd2))
     for item in [_ for _ in rdata.exp if 'better' in _]:
-        assert item in result
+        check_in(item, result)
     for item in [_ for _ in rdata.exp if 'better' not in _]:
-        assert item not in result
+        check_in(item, result, negate=True)
 
 
 # -----------------------------------------------------------------------------
@@ -660,7 +660,7 @@ def test_zlint():
     # result = tbx.run(u'flake8 tbx test')
     result = subp.Popen(shlex.split("flake8 tbx test"),
                         stdout=subp.PIPE).communicate()[0]
-    assert result == ''
+    assert result == b''
 
 
 # -----------------------------------------------------------------------------
@@ -704,3 +704,20 @@ def rdata():
     zen = get_this()
     rdata.exp = [_ for _ in zen.split('\n') if _ != '']
     return rdata
+
+
+# -----------------------------------------------------------------------------
+def check_in(a, b, negate=False):
+    """
+    Assert that a is in b and fail otherwise
+    """
+    if type(a) == type(b):
+        if negate:
+            assert a not in b
+        else:
+            assert a in b
+    elif isinstance(a, str) and isinstance(b, bytes):
+        if negate:
+            assert bytes(a, 'utf8') not in b
+        else:
+            assert bytes(a, 'utf8') in b
