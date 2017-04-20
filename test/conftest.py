@@ -35,8 +35,11 @@ def pytest_configure(config):
     # on the first failure) turned on by default. But if I've put --all on the
     # command line, I want to override the -x (config.option.exitfirst) so turn
     # it off.
-    if config.option.all and config.option.exitfirst:
-        config.option.exitfirst = False
+    if config.getoption("--all"):
+        if "exitfirst" in config.option.__dict__:
+            config.option.__dict__["exitfirst"] = False
+        if "maxfail" in config.option.__dict__:
+            config.option.__dict__["maxfail"] = 200
 
 
 # -----------------------------------------------------------------------------
