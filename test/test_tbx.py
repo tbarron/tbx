@@ -4,7 +4,11 @@ Tests for module tbx
 import os
 import re
 import shutil
-import StringIO
+try:
+    import StringIO
+except ImportError:
+    import io
+    StringIO = io.StringIO
 import sys
 
 import pytest
