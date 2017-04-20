@@ -5,7 +5,11 @@ import contextlib
 import os
 import re
 import shlex
-import StringIO
+try:
+    import StringIO
+except ImportError:
+    import io
+    StringIO = io.StringIO
 import subprocess as sproc
 import sys
 
