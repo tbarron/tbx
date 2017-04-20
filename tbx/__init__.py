@@ -234,13 +234,15 @@ def run(cmd, input=None, output=None):
         kwa['stdout'] = output
 
     child = sproc.Popen(posarg, **kwa)
-    if input:
+    if isinstance(input, bytes):
+        (out, _) = child.communicate(input)
+    elif isinstance(input, str):
         (out, _) = child.communicate(bytes(input, 'utf8'))
     else:
         (out, _) = child.communicate()
 
     if isinstance(output, io.StringIO):
-        output.write(out)
+        output.write(str(out))
         out = None
     elif isinstance(output, file):
         out = None
