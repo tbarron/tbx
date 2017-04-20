@@ -652,7 +652,7 @@ def test_zlint():
     """
     Run flake8 on the payload and test code
     """
-    result = tbx.run('flake8 tbx test')
+    result = tbx.run(u'flake8 tbx test')
     assert result == ''
 
 
