@@ -124,7 +124,7 @@ def test_contents_good_altsep(ctest):
 # -----------------------------------------------------------------------------
 def test_contents_badfmt(ctest):
     """
-    Calling contents on a file that exists as a list
+    Calling contents on a file that exists with an invalid separator
     """
     pytest.dbgfunc()
     with pytest.raises(tbx.Error) as err:
@@ -142,6 +142,17 @@ def test_contents_badperm(ctest):
     with pytest.raises(tbx.Error) as err:
         _ = tbx.contents(ctest.data.strpath, fmt=str, sep=r'\s')
     assert "Can't read file {0}".format(ctest.data.strpath) in str(err)
+
+
+# -----------------------------------------------------------------------------
+def test_contents_invalid_fmt(ctest):
+    """
+    Calling contents with an invalid format
+    """
+    pytest.dbgfunc()
+    with pytest.raises(tbx.Error) as err:
+        _ = tbx.contents(ctest.data.strpath, fmt='foobar', sep=r'\s')
+    assert "tbx.Error: Invalid format" in str(err)
 
 
 # -----------------------------------------------------------------------------
