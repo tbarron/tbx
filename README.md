@@ -51,3 +51,15 @@
       written to stdin of the command. If a str *input* ends with '|'
       the argument will be run as a command and its output will be
       written to stdin of the payload command.
+
+## Running tests
+
+        $ py.test
+
+With a coverage report (must have coverage and pytest-cov installed):
+
+        $ py.test --cov
+
+With a coverage report showing the lines not tested
+
+        $ py.test --cov --cov-report term-missing
