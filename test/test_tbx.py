@@ -56,11 +56,13 @@ def test_chdir_rug(tmpdir):
         with pytest.raises(OSError) as err:
             with tbx.chdir('..'):
                 assert os.getcwd() == origin
-        assert 'No such file or directory' in str(err)
+        assert any(['No such file or directory' in str(err),
+                    'Invalid argument' in str(err)])
         with pytest.raises(OSError) as err:
             assert os.getcwd() == rug.strpath
     assert os.getcwd() == origin
-    assert 'No such file or directory' in str(err)
+    assert any(['No such file or directory' in str(err),
+                'Invalid argument' in str(err)])
 
 
 # -----------------------------------------------------------------------------
