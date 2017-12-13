@@ -3,6 +3,8 @@ __pycache__
 pytest.ini
 TODO
 tbx.egg-info
+.env
+venv
 .coverage*
 .tbx-cov
 .tox
