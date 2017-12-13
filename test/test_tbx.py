@@ -154,7 +154,7 @@ def test_contents_invalid_fmt(ctest):
     pytest.dbgfunc()
     with pytest.raises(tbx.Error) as err:
         _ = tbx.contents(ctest.data.strpath, fmt='foobar', sep=r'\s')
-    assert "tbx.Error: Invalid format" in str(err)
+    assert "Error: Invalid format" in str(err)
 
 
 # -----------------------------------------------------------------------------
