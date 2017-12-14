@@ -33,9 +33,11 @@
       returning them to their original values when control leaves the
       context.
 
-      with envset(PATH='somewhere:else'):
-          ... do stuff with alternate $PATH ...
-      # $PATH is back to its original value
+          orig = getenv("PATH")
+          with envset(PATH='/somewhere/else'):
+              assert "/somewhere/else" == getenv("PATH")
+              ... do stuff with alternate $PATH ...
+          assert orig == getenv("PATH")
 
  * fatal(msg)
     * Print *msg* and exit the process
