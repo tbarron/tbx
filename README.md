@@ -1,6 +1,6 @@
 # Toolbox library in python
 
-## Functions
+## Functions (see Examples below)
 
  * chdir(path)
     * Context manager that allows directory excursions that
@@ -33,12 +33,6 @@
       returning them to their original values when control leaves the
       context.
 
-          orig = getenv("PATH")
-          with tbx.envset(PATH='/somewhere/else'):
-              assert "/somewhere/else" == getenv("PATH")
-              ... do stuff with alternate $PATH ...
-          assert orig == getenv("PATH")
-
  * fatal(msg)
     * Print *msg* and exit the process
 
@@ -58,11 +52,21 @@
 
   * chdir(PATH)
 
+        import tbx
+
         orig = getcwd()
         with tbx.chdir("/other/directory"):
             assert "/other/directory" == getcwd()
             ... do work in "/other/directory"
         assert orig == getcwd()
+
+ * envset(VARNAME=VALUE, ...)
+
+        orig = getenv("PATH")
+        with tbx.envset(PATH='/somewhere/else'):
+            assert "/somewhere/else" == getenv("PATH")
+            ... do stuff with alternate $PATH ...
+        assert orig == getenv("PATH")
 
 ## Running tests
 
