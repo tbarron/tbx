@@ -20,13 +20,15 @@
 
  * dispatch(mname, prefix, args)
     * Introspect module *mname* for a callable named *prefix*_*args[0]*. If
-      found, call it with arguments *args[1:]*
+      found, call it with arguments *args[1:]*. DEPRECATED: Use
+      docopt_dispatch instead.
 
  * dispatch_help(mname, prefix, args)
     * Introspect module *mname* and print help info from __doc__
       strings for callables with names [*prefix*_foo for foo in args].
       If *args* is empty, print the first line of each __doc__ for all
-      the callables in the module whose name begins with *prefix*
+      the callables in the module whose name begins with *prefix*.
+      DEPRECATED: Use docopt_dispatch instead.
 
  * envset(VARNAME=VALUE, ...)
     * Context manager that sets one or more environment variables,
