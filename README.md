@@ -60,6 +60,7 @@
             ... do work in "/other/directory"
         assert orig == getcwd()
 
+
  * contents(FILENAME, default=None, fmt={'str'|'list'}, sep='\n')
 
         from py.path import local
@@ -68,28 +69,37 @@
         example.write("one\ntwo\nthree\nfour\n")
 
         # default operation
-        info = contents("testdata")
+        info = tbx.contents("testdata")
         assert info == "one\ntwo\nthree\nfour\n"
 
         # return a list rather than a string
-        info = contents("testdata", fmt='list')
+        info = tbx.contents("testdata", fmt='list')
         assert info == ["one", "two", "three", "four"]
 
         # return default if file does not exist
-        info = contents("nosuchfile", default="the file does not exist")
+        info = tbx.contents("nosuchfile", default="the file does not exist")
         assert info == "the file does not exist"
 
         # but if the file is empty, return an empty string
-        info = contents("/dev/null", default="the file is empty")
+        info = tbx.contents("/dev/null", default="the file is empty")
         assert info == ""
 
         # alternate separator
-        info = contents("testdata", fmt='list', sep="t")
+        info = tbx.contents("testdata", fmt='list', sep="t")
         assert info == ["one\n", "wo\n", "hree\nfour"]
 
         # alternate separator is a string, not a character class
-        info = contents("testdata", fmt='list', sep="\nt")
+        info = tbx.contents("testdata", fmt='list', sep="\nt")
         assert info == ["one", "wo", "hree\nfour"]
+
+
+ * dirname(PATH, level=1)
+
+        assert tbx.dirname("/a/b/c/d/e/f") == "/a/b/c/d/e"
+        assert tbx.dirname("/a/b/c/d/e/f", 2) == "/a/b/c/d"
+        assert tbx.dirname("foobar") == "."
+        assert tbx.dirname("/a/b/c/d/e/f", 25) == "/"
+
 
  * envset(VARNAME=VALUE, ...)
 
@@ -98,6 +108,7 @@
             assert "/somewhere/else" == getenv("PATH")
             ... do stuff with alternate $PATH ...
         assert orig == getenv("PATH")
+
 
 ## Running tests
 
