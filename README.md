@@ -7,12 +7,6 @@
       automagically return to your starting point upon exiting the
       with scope.
 
-          orig = getcwd()
-          with tbx.chdir("/other/directory"):
-              assert "/other/directory" == getcwd()
-              ... do work in "/other/directory"
-          assert orig == getcwd()
-
  * contents(name, default=None, fmt='str', sep='\n')
     * Return the contents of a file. If the file does not exist,
       return *default*. If *fmt* is 'list', the return value is a list
@@ -59,6 +53,16 @@
       written to stdin of the command. If a str *input* ends with '|'
       the argument will be run as a command and its output will be
       written to stdin of the payload command.
+
+### Examples
+
+  * chdir(PATH)
+
+      orig = getcwd()
+      with tbx.chdir("/other/directory"):
+          assert "/other/directory" == getcwd()
+          ... do work in "/other/directory"
+      assert orig == getcwd()
 
 ## Running tests
 
