@@ -60,6 +60,37 @@
             ... do work in "/other/directory"
         assert orig == getcwd()
 
+ * contents(FILENAME, default=None, fmt={'str'|'list'}, sep='\n')
+
+        from py.path import local
+
+        example = local("testdata")
+        example.write("one\ntwo\nthree\nfour\n")
+
+        # default operation
+        info = contents("testdata")
+        assert info == "one\ntwo\nthree\nfour\n"
+
+        # return a list rather than a string
+        info = contents("testdata", fmt='list')
+        assert info == ["one", "two", "three", "four"]
+
+        # return default if file does not exist
+        info = contents("nosuchfile", default="the file does not exist")
+        assert info == "the file does not exist"
+
+        # but if the file is empty, return an empty string
+        info = contents("/dev/null", default="the file is empty")
+        assert info == ""
+
+        # alternate separator
+        info = contents("testdata", fmt='list', sep="t")
+        assert info == ["one\n", "wo\n", "hree\nfour"]
+
+        # alternate separator is a string, not a character class
+        info = contents("testdata", fmt='list', sep="\nt")
+        assert info == ["one", "wo", "hree\nfour"]
+
  * envset(VARNAME=VALUE, ...)
 
         orig = getenv("PATH")
