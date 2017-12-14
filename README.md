@@ -7,6 +7,12 @@
       automagically return to your starting point upon exiting the
       with scope.
 
+          orig = getcwd()
+          with tbx.chdir("/other/directory"):
+              assert "/other/directory" == getcwd()
+              ... do work in "/other/directory"
+          assert orig == getcwd()
+
  * contents(name, default=None, fmt='str', sep='\n')
     * Return the contents of a file. If the file does not exist,
       return *default*. If *fmt* is 'list', the return value is a list
@@ -34,7 +40,7 @@
       context.
 
           orig = getenv("PATH")
-          with envset(PATH='/somewhere/else'):
+          with tbx.envset(PATH='/somewhere/else'):
               assert "/somewhere/else" == getenv("PATH")
               ... do stuff with alternate $PATH ...
           assert orig == getenv("PATH")
