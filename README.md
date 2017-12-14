@@ -58,11 +58,11 @@
 
   * chdir(PATH)
 
-      orig = getcwd()
-      with tbx.chdir("/other/directory"):
-          assert "/other/directory" == getcwd()
-          ... do work in "/other/directory"
-      assert orig == getcwd()
+        orig = getcwd()
+        with tbx.chdir("/other/directory"):
+            assert "/other/directory" == getcwd()
+            ... do work in "/other/directory"
+        assert orig == getcwd()
 
 ## Running tests
 
