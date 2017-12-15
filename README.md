@@ -138,6 +138,45 @@
             count_up += 1
             last = idx
 
+  * run(CMD, input={str|StringIO|fd|file}, output={str|StringIO|fd|file})
+
+        # By default, no input expected, output goes to return value
+        result = run("echo This is a message")
+        assert "This is a message\n" == result
+
+        # output=<str>, redirect to a file
+        result = run("echo This is a message", output="> myfile")
+        # "This is a message" written to file myfile
+
+        # output=<str>, redirect to a command
+        result = run("echo This is a message", output="| cut -c1-14")
+        assert "This is a mess\n" == result
+
+        # output=<StringIO>
+        StringIO abc
+        run("echo This is a message", output=abc)
+        assert abc.getvalue() == "This is a message\n"
+
+        # output=<file descriptor>
+        outfile = open("outfile", 'w')
+        run("echo This is a message", output=outfile.fileno())
+        # "This is a message\n" written to file outfile
+
+        # output=<file object>
+        outfile = open("outfile", 'w')
+        run("echo This is a message", output=outfile)
+        # "This is a message\n" written to file outfile
+
+        # input=<str>, read a file
+        infile = local("infile")
+        infile.write("This is a message\n")
+        result = run("cat", "< {}".format(infile.strpath))
+        assert "This is a message\n" == result
+
+        # input=<str>, input piped from a command
+
+        run(""
+
 
 ## Running tests
 
