@@ -44,11 +44,18 @@
 
  * run(cmd, input={str|StringIO|fd|file},
             output={str|StringIO|fd|file})
-    * If *input* (or *output*) is a str that begins with '<', the path
-      named in the argument will be read and its contents will be
-      written to stdin of the command. If a str *input* ends with '|'
-      the argument will be run as a command and its output will be
-      written to stdin of the payload command.
+
+    * If *input* is a str that begins with '<', the path named in the
+      argument will be read and its contents will be written to stdin of
+      the command. If a str *input* ends with '|' the argument will be run
+      as a command and its output will be written to stdin of the payload
+      command.
+
+    * If *output* is a str that begins with '> ', the command's output will
+      be written to the file named in the remainder of the string. If
+      *output* is a str beginning with '| ', the commands's output will be
+      piped to stdin of the command named in the remainder of the string.
+
 
 ### Examples
 
