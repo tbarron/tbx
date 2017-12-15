@@ -167,15 +167,34 @@
         run("echo This is a message", output=outfile)
         # "This is a message\n" written to file outfile
 
+        # input=<str>, use content of string
+        result = run("cat", input="This is a message\n")
+        assert "This is a message\n" == result
+
         # input=<str>, read a file
         infile = local("infile")
         infile.write("This is a message\n")
-        result = run("cat", "< {}".format(infile.strpath))
+        result = run("cat", input="< {}".format(infile.strpath))
         assert "This is a message\n" == result
 
         # input=<str>, input piped from a command
+        result = run("cat", input="echo This is a message |")
+        assert "This is a message\n" == result
 
-        run(""
+        StringIO abc("This is a message\n")
+        result = run("cat", input=abc)
+        assert "This is a message\n" == result
+
+        # input=<file-descriptor>
+        infile = local("infile")
+        infile.write("This is a message\n")
+        f = open(infile.strpath, 'r')
+        result = run("cat", input=f.fileno())
+        assert "This is a message\n" == result
+
+        # input=<file-object>
+        result = run("cat", input=open(infile.strpath, 'r'))
+        assert "This is a message\n" == result
 
 
 ## Running tests
