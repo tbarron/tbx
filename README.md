@@ -118,6 +118,10 @@
             ... do stuff with alternate $PATH ...
         assert orig == getenv("PATH")
 
+  * fatal(MSG)
+
+        fatal("The process ends now")
+
 
 ## Running tests
 
