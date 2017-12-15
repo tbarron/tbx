@@ -122,6 +122,20 @@
 
         fatal("The process ends now")
 
+  * revnumerate(SEQUENCE)
+
+        import string
+
+        last = None
+        count_up = 0
+        for idx, item in revnumerate(string.ascii_uppercase):
+            if last:
+                assert idx = last - 1
+            assert item == string.ascii_uppercase[idx]
+            assert idx == len(string.ascii_uppercase) - count_up
+            count_up += 1
+            last = idx
+
 
 ## Running tests
 
