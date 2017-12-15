@@ -110,7 +110,7 @@
         assert tbx.dirname("/a/b/c/d/e/f", 25) == "/"
 
 
- * envset(VARNAME=VALUE, ...)
+  * envset(VARNAME=VALUE, ...)
 
         orig = getenv("PATH")
         with tbx.envset(PATH='/somewhere/else'):
@@ -118,9 +118,11 @@
             ... do stuff with alternate $PATH ...
         assert orig == getenv("PATH")
 
+
   * fatal(MSG)
 
         fatal("The process ends now")
+
 
   * revnumerate(SEQUENCE)
 
