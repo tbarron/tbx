@@ -208,3 +208,15 @@ With a coverage report (must have coverage and pytest-cov installed):
 With a coverage report showing the lines not tested
 
         $ py.test --cov --cov-report term-missing
+
+## Notes
+
+ * Notice that there is an assymetry between `run(<cmd>, input=<str>, ...)`
+   and `run(<cmd>, ..., output=<str>)`.
+
+    * Specifically, `input=<str>` can use the string directly as input, or
+      use it as a redirection expression (`<cmd> |` or `> <path>`).
+
+    * However, in the case of `output=<str>`, the called run function can't
+      assign into the string named as the output argument. The output
+      argument can use the string as a redirection expression, but that's all.
