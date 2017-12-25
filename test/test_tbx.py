@@ -18,6 +18,17 @@ import tbx
 
 
 # -----------------------------------------------------------------------------
+def test_zlint():
+    """
+    Run flake8 on the payload and test code
+    """
+    # result = tbx.run(u'flake8 tbx test')
+    result = subp.Popen(shlex.split("flake8 tbx test"),
+                        stdout=subp.PIPE).communicate()[0]
+    assert result.decode() == ''
+
+
+# -----------------------------------------------------------------------------
 def test_chdir_good(tmpdir):
     """
     chdir(a.directory.that.exists) should work. After the with statement, we
@@ -327,6 +338,7 @@ def test_envset_new_none():
     with tbx.envset(TEST_ENVSET=None):
         assert os.getenv(vname) is None
     assert os.getenv(vname) is None
+
 
 # -----------------------------------------------------------------------------
 def test_envset_new_1():
@@ -691,17 +703,6 @@ def test_version():
         sys.path.insert(0, tbx.dirname(os.__file__, 2))
         import version
     assert taglist[-1] == version._v
-
-
-# -----------------------------------------------------------------------------
-def test_zlint():
-    """
-    Run flake8 on the payload and test code
-    """
-    # result = tbx.run(u'flake8 tbx test')
-    result = subp.Popen(shlex.split("flake8 tbx test"),
-                        stdout=subp.PIPE).communicate()[0]
-    assert result == b''
 
 
 # -----------------------------------------------------------------------------
