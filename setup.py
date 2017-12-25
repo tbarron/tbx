@@ -1,3 +1,4 @@
+import version
 try:
     from setuptools import setup
 except ImportError:
@@ -20,7 +21,7 @@ test_requirements = [
 
 setup(
     name='tbx',
-    version='0.0.2',
+    version=version._v,
     description="toolbox",
     # long_description=readme,
     author="Tom Barron",
