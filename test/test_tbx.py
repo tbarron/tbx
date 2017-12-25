@@ -317,6 +317,18 @@ def xtst_undocumented(*args):
 
 
 # -----------------------------------------------------------------------------
+def test_envset_new_none():
+    """
+    Set a new environment variable to None
+    """
+    vname = 'TEST_ENVSET'
+    if os.getenv(vname):
+        del os.environ[vname]
+    with tbx.envset(TEST_ENVSET=None):
+        assert os.getenv(vname) is None
+    assert os.getenv(vname) is None
+
+# -----------------------------------------------------------------------------
 def test_envset_new_1():
     """
     Set a single new environment variable
