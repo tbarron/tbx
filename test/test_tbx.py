@@ -690,10 +690,15 @@ def test_run_cmd_ofobj(rdata, tmpdir):
 
 
 # -----------------------------------------------------------------------------
-def test_version():
+def test_deploy_ready():
     """
-    Check the setting of the version
+    Check the setting of the version and that git status doesn't show anything
+    outstanding
     """
+    result = subp.Popen(shlex.split("git status --porc"),
+                        stdout=subp.PIPE).communicate()[0]
+    assert result.decode().strip() == ""
+
     result = subp.Popen(shlex.split("git tag"),
                         stdout=subp.PIPE).communicate()[0]
     taglist = result.decode().strip().split("\n")
