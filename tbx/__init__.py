@@ -162,7 +162,8 @@ def envset(**kwargs):
         # set the new values
         for name in kwargs:
             if kwargs[name] is None:
-                del os.environ[name]
+                if name in os.environ:
+                    del os.environ[name]
             else:
                 os.environ[name] = kwargs[name]
 
