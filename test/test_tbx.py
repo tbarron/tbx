@@ -678,6 +678,22 @@ def test_run_cmd_ofobj(rdata, tmpdir):
 
 
 # -----------------------------------------------------------------------------
+def test_version():
+    """
+    Check the setting of the version
+    """
+    result = subp.Popen(shlex.split("git tag"),
+                        stdout=subp.PIPE).communicate()[0]
+    taglist = result.decode().strip().split("\n")
+    try:
+        import version
+    except ImportError:
+        sys.path.insert(0, tbx.dirname(os.__file__, 2))
+        import version
+    assert taglist[-1] == version._v
+
+
+# -----------------------------------------------------------------------------
 def test_zlint():
     """
     Run flake8 on the payload and test code
