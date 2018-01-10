@@ -1,7 +1,0 @@
-1.0.2
- - Fix for breakage when setting a non-existent env var to None. We were
-   attempting to del a key from os.environ that wasn't there.
- - Hold the version in version.py rather than hard-coding it in setup.py.
-   In setup.py, make use of version._v.
- - Add test to verify that version._v matches the last git tag.
- - Rearrange the tests: lint first, version last.
