@@ -178,6 +178,24 @@ def envset(**kwargs):
 
 
 # -----------------------------------------------------------------------------
+def expand(path):
+    """
+    Return path with any '~' or env vars expanded.
+    """
+    return expanduser(os.path.expandvars(path))
+
+
+# -----------------------------------------------------------------------------
+def expanduser(instr):
+    """
+    Expand '~' to the contents of $HOME
+    """
+    hval = os.getenv("HOME") or ""
+    rval = re.sub("~", hval, instr)
+    return rval
+
+
+# -----------------------------------------------------------------------------
 def fatal(msg='Fatal error with no reason specified'):
     """
     The default value is okay because strings in python are immutable
