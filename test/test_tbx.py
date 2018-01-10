@@ -15,6 +15,12 @@ import sys
 import pytest
 
 import tbx
+import version
+try:
+    from git import Repo
+    skip_deployable = False
+except ImportError:
+    skip_deployable = True
 
 
 # -----------------------------------------------------------------------------
@@ -712,24 +718,24 @@ def test_run_cmd_ofobj(rdata, tmpdir):
 
 
 # -----------------------------------------------------------------------------
-def test_deploy_ready():
+def test_deployable():
     """
-    Check the setting of the version and that git status doesn't show anything
-    outstanding
+    Check that 1) no untracked files are hanging out, 2) no staged but
+    uncommitted updates are outstanding, 3) no unstaged, uncommitted changes
+    are outstanding, 4) the most recent git tag matches HEAD, and 5) the most
+    recent git tag matches the current version.
     """
-    result = subp.Popen(shlex.split("git status --porc"),
-                        stdout=subp.PIPE).communicate()[0]
-    assert result.decode().strip() == ""
-
-    result = subp.Popen(shlex.split("git tag"),
-                        stdout=subp.PIPE).communicate()[0]
-    taglist = result.decode().strip().split("\n")
-    try:
-        import version
-    except ImportError:
-        sys.path.insert(0, tbx.dirname(os.__file__, 2))
-        import version
-    assert taglist[-1] == version._v
+    if skip_deployable:
+        pytest.skip()
+    r = Repo('.')
+    assert [] == r.untracked_files, "You have untracked files"
+    assert [] == r.index.diff(r.head.commit), "You have staged updates"
+    assert [] == r.index.diff(None), "You have uncommitted changes"
+    stags = sorted(r.tags,
+                   key=lambda x: x.commit.committed_date,
+                   reverse=True)
+    assert version._v == str(stags[0]), "Version does not match tag"
+    assert str(r.head.commit) == str(stags[0].commit), "Tag != HEAD"
 
 
 # -----------------------------------------------------------------------------
