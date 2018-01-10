@@ -434,6 +434,28 @@ def test_envset_rmset():
 
 
 # -----------------------------------------------------------------------------
+@pytest.mark.parametrize("inp, exp", [   # noqa
+    ('$FOO', 'my home dir = /home/dir'),
+    ('do nothing', 'do nothing'),
+    ('$HOME', '/home/dir'),
+    ('~', '/home/dir'),
+    ('EVAR', 'EVAR'),
+    ('EVAR/~', 'EVAR//home/dir'),
+    ('$EVAR', 'value'),
+    ('~/$EVAR', '/home/dir/value'),
+    ])
+def test_expand(inp, exp):
+    """
+    Expand all environment variables, then expand '~' into $HOME.
+
+    Note: os.path.expanduser() only expands '~' if it's at the beginning of the
+    string (not what I want)
+    """
+    with tbx.envset(HOME='/home/dir', FOO='my home dir = ~', EVAR='value'):
+        assert tbx.expand(inp) == exp
+
+
+# -----------------------------------------------------------------------------
 def test_fatal_empty():
     """
     fatal(empty message) should throw a SystemExit with some non-empty message
