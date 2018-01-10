@@ -1,3 +1,17 @@
+## 1.0.3 2018.0110
+
+ - Update tbx.expand() to expand '~' even when it's not at the beginning of
+   the input (which is what os.path.expanduser() does).
+
+## 1.0.2 2017.1224
+
+ - Fix for breakage when setting a non-existent env var to None. We were
+   attempting to del a key from os.environ that wasn't there.
+ - Hold the version in version.py rather than hard-coding it in
+   setup.py. In setup.py, make use of version._v.
+ - Add test to verify that version._v matches the last git tag.
+ - Rearrange the tests: lint first, version last.
+
 ## 1.0.1 2017.1215
 
  * Improving CHANGELOG legibility
