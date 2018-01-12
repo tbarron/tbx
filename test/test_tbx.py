@@ -529,6 +529,7 @@ def test_run_cmd(rdata):
     """
     pytest.dbgfunc()
     result = tbx.run("python -c 'import this'")
+    assert isinstance(result, str)
     for item in rdata.exp:
         check_in(item, result)
 
@@ -540,6 +541,7 @@ def test_run_cmd_istr(rdata):
     """
     pytest.dbgfunc()
     result = tbx.run('python', input='import this\n')
+    assert isinstance(result, str)
     for item in rdata.exp:
         check_in(item, rdata.exp)
 
@@ -551,6 +553,7 @@ def test_run_cmd_istrio(rdata):
     """
     pytest.dbgfunc()
     result = tbx.run('python', input=io.StringIO('import this\n'))
+    assert isinstance(result, str)
     for item in rdata.exp:
         check_in(item, result)
 
@@ -564,6 +567,7 @@ def test_run_cmd_ipath(rdata, tmpdir):
     input_file = tmpdir.join('script')
     input_file.write('import this\n')
     result = tbx.run('python', input='< {0}'.format(input_file))
+    assert isinstance(result, str)
     for item in rdata.exp:
         check_in(item, result)
 
@@ -576,6 +580,7 @@ def test_run_cmd_icmd(rdata):
     pytest.dbgfunc()
     icmd = "echo 'import this' |"
     result = tbx.run('python', input=icmd)
+    assert isinstance(result, str)
     for item in rdata.exp:
         check_in(item, result)
 
@@ -591,6 +596,7 @@ def test_run_cmd_ifd(rdata, tmpdir):
     fobj = infile.open(mode='r')
     fnum = fobj.fileno()
     result = tbx.run('python', input=fnum)
+    assert isinstance(result, str)
     for item in rdata.exp:
         check_in(item, result)
 
@@ -605,6 +611,7 @@ def test_run_cmd_ifobj(rdata, tmpdir):
     infile.write('import this\n')
     fobj = infile.open(mode='r')
     result = tbx.run('python', input=fobj)
+    assert isinstance(result, str)
     for item in rdata.exp:
         check_in(item, rdata.exp)
 
@@ -618,6 +625,7 @@ def test_run_cmd_ostr():
     pytest.dbgfunc()
     with pytest.raises(tbx.Error) as err:
         tbx.run('python -c "import this"', output='foobar')
+        assert isinstance(result, str)
     assert '| or > required for string output' in str(err)
 
 
@@ -678,6 +686,7 @@ def test_run_cmd_ocmd(rdata):
     cmd1 = "python -c 'import this'"
     cmd2 = "grep better"
     result = tbx.run(cmd1, output='| {0}'.format(cmd2))
+    assert isinstance(result, str)
     for item in [_ for _ in rdata.exp if 'better' in _]:
         check_in(item, result)
     for item in [_ for _ in rdata.exp if 'better' not in _]:
