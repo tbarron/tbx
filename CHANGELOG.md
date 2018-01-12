@@ -1,4 +1,11 @@
-## 1.0.3 2018.0110
+## 1.0.4 ... 2018.0112
+
+ * tbx.run() used to return a byte array, now it always returns a str.
+ * Starting to use pipenv (added Pipfile, Pipfile.lock).
+ * Added test to verify that processes spawned under tbx.envset() reflect
+   the adjusted environment.
+
+## 1.0.3 ... 2018.0110
 
  - Update tbx.expand() to expand '~' even when it's not at the beginning of
    the input (which is what os.path.expanduser() does).
