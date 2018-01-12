@@ -440,6 +440,22 @@ def test_envset_rmset():
 
 
 # -----------------------------------------------------------------------------
+def test_envset_child():
+    """
+    If we set an env var with envset, then spawn a process, the new setting
+    should show up in the child process.
+    """
+    pytest.dbgfunc()
+    result = tbx.run("env")
+    assert "TBX_TEST=gargantuan" not in result
+    with tbx.envset(TBX_TEST="gargantuan"):
+        result = tbx.run("env")
+        assert "TBX_TEST=gargantuan" in result
+    result = tbx.run("env")
+    assert "TBX_TEST=gargantuan" not in result
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("inp, exp", [   # noqa
     ('$FOO', 'my home dir = /home/dir'),
     ('do nothing', 'do nothing'),

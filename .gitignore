@@ -1,7 +1,7 @@
 .cache
 __pycache__
 pytest.ini
-TODO
+DODO*
 tbx.egg-info
 .env
 venv
