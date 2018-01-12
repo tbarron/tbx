@@ -625,7 +625,6 @@ def test_run_cmd_ostr():
     pytest.dbgfunc()
     with pytest.raises(tbx.Error) as err:
         tbx.run('python -c "import this"', output='foobar')
-        assert isinstance(result, str)
     assert '| or > required for string output' in str(err)
 
 

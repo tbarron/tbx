@@ -271,7 +271,10 @@ def run(cmd, input=None, output=None):
         cmd = output.strip()[1:].strip()
         out = run(cmd, input=out)
 
-    return out
+    if isinstance(out, bytes):
+        return out.decode()
+    elif isinstance(out, str):
+        return out
 
 
 # -----------------------------------------------------------------------------
