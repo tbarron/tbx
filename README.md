@@ -35,6 +35,17 @@
       returning them to their original values when control leaves the
       context.
 
+ * Error(message)
+    * The Error class provides a simple exception class for use in the tbx
+      library and any packages that import it.
+
+ * expand(str)
+    * Expand environment variables in *str*, replacing "$<variable>" with
+      the contents of the variable. Replace occurrences of '~' in the
+      argument with the contents of $HOME. Variable expansion happens first
+      so that any occurrences of '~' in the contents of variables get
+      expanded as part of user expansion.
+
  * fatal(msg)
     * Print *msg* and exit the process
 
@@ -117,6 +128,18 @@
             assert "/somewhere/else" == getenv("PATH")
             ... do stuff with alternate $PATH ...
         assert orig == getenv("PATH")
+
+
+  * raise Error('this is the error message')
+
+        Traceback (most recent call last):
+          File "<string>", line 1, in <module>
+        tbx.Error: this is the error message
+
+
+  * expand("HOME = $HOME = ~")
+
+        "HOME = /usr/home/username = /usr/home/username"
 
 
   * fatal(MSG)
