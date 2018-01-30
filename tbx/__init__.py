@@ -182,11 +182,11 @@ def expand(path):
     """
     Return path with any '~' or env vars expanded.
     """
-    return expanduser(os.path.expandvars(path))
+    return _expanduser(os.path.expandvars(path))
 
 
 # -----------------------------------------------------------------------------
-def expanduser(instr):
+def _expanduser(instr):
     """
     Expand '~' to the contents of $HOME
     """
