@@ -1,4 +1,8 @@
-## 1.0.5 ... 2018.0130
+## 1.0.6 ... 2018.0212
+
+ * Write git functions and use them in test_deployable()
+
+## 1.0.5 ... 2018.0130 15:52:42
 
  * Document and add examples for Error() and expand().
  * Rename expanduser() to _expanduser() to indicate that it is intended to
