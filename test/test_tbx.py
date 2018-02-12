@@ -15,12 +15,6 @@ import sys
 import pytest
 
 import tbx
-import version
-try:
-    from git import Repo
-    skip_deployable = False
-except ImportError:
-    skip_deployable = True
 
 
 # -----------------------------------------------------------------------------
@@ -758,17 +752,20 @@ def test_deployable():
     are outstanding, 4) the most recent git tag matches HEAD, and 5) the most
     recent git tag matches the current version.
     """
-    if skip_deployable:
-        pytest.skip()
-    r = Repo('.')
-    assert [] == r.untracked_files, "You have untracked files"
-    assert [] == r.index.diff(r.head.commit), "You have staged updates"
-    assert [] == r.index.diff(None), "You have uncommitted changes"
-    stags = sorted(r.tags,
-                   key=lambda x: x.commit.committed_date,
-                   reverse=True)
-    assert version._v == str(stags[0]), "Version does not match tag"
-    assert str(r.head.commit) == str(stags[0].commit), "Tag != HEAD"
+    pytest.dbgfunc()
+    staged, changed, untracked = tbx.git_status()
+    assert untracked == [], "You have untracked files"
+    assert changed == [], "You have unstaged updates"
+    assert staged == [], "You have updates staged but not committed"
+
+    if tbx.git_current_branch() != 'master':
+        return True
+
+    last_tag = tbx.git_last_tag()
+    msg = "Version ({}) does not match tag ({})".format(tbx.version(),
+                                                        last_tag)
+    assert tbx.version() == last_tag, msg
+    assert tbx.git_hash() == tbx.git_hash(last_tag), "Tag != HEAD"
 
 
 # -----------------------------------------------------------------------------
