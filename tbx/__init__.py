@@ -12,6 +12,7 @@ except ImportError:
     file = io.TextIOWrapper
 import subprocess as sproc
 import sys
+from tbx import verinfo
 
 
 # -----------------------------------------------------------------------------
@@ -275,6 +276,14 @@ def run(cmd, input=None, output=None):
         return out.decode()
     elif isinstance(out, str):
         return out
+
+
+# -----------------------------------------------------------------------------
+def version():
+    """
+    Returns the current project version
+    """
+    return verinfo._v
 
 
 # -----------------------------------------------------------------------------

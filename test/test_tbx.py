@@ -742,6 +742,15 @@ def test_run_cmd_ofobj(rdata, tmpdir):
 
 
 # -----------------------------------------------------------------------------
+def test_version():
+    """
+    Verify that tbx.version() returns a valid version string
+    """
+    pytest.dbgfunc()
+    assert re.match("\d\.\d\.\d", tbx.version())
+
+
+# -----------------------------------------------------------------------------
 def test_deployable():
     """
     Check that 1) no untracked files are hanging out, 2) no staged but
