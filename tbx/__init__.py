@@ -205,6 +205,63 @@ def fatal(msg='Fatal error with no reason specified'):
 
 
 # -----------------------------------------------------------------------------
+def git_last_tag():
+    """
+    Return the most recently defined tag
+    """
+    result = run("git --no-pager tag")
+    tag_l = result.strip().split("\n")
+    rval = tag_l[-1] if 0 < len(tag_l) else ""
+    return rval
+
+
+# -----------------------------------------------------------------------------
+def git_hash(ref=None):
+    """
+    Return a hash -- of HEAD if *ref* == None, of whatever *ref* points to if
+    specified
+    """
+    cmd = "git --no-pager log -1 --format=format:\"%H\""
+    if ref:
+        cmd += " {}".format(ref)
+    result = run(cmd)
+    return result
+
+
+# -----------------------------------------------------------------------------
+def git_current_branch():
+    """
+    Run 'git branch' and return the one marked with a '*'
+    """
+    result = run("git branch")
+    for candy in result.split("\n"):
+        if "*" in candy:
+            curb = candy.split()[1]
+            break
+    return curb
+
+
+# -----------------------------------------------------------------------------
+def git_status():
+    """
+    Run 'git status --porc' and return: 1) a list of untracked files, 2) a list
+    of unstaged updates, and 3) a list of staged but uncommitted updates.
+    """
+    subx = "^[AM? ][AM? ]\s"
+    mstgx = "^[AM].\s"
+    mchgx = "^.[AM]\s"
+    utrkx = "^\?\?"
+    result = run("git status --porc").strip()
+    staged = [re.sub(subx, "", x) for x in result.split("\n")
+              if re.match(mstgx, x)]
+    unstaged = [re.sub(subx, "", x) for x in result.split("\n")
+                if re.match(mchgx, x)]
+    untracked = [re.sub(subx, "", x) for x in result.split("\n")
+                 if re.match(utrkx, x)]
+    return(staged, unstaged, untracked)
+
+
+# -----------------------------------------------------------------------------
 def revnumerate(sequence):
     """
     Enumerate *sequence* in reverse
