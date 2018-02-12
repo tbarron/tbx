@@ -5,10 +5,7 @@ import os
 import re
 import shlex
 import shutil
-try:
-    import StringIO as io
-except ImportError:
-    import io
+import io
 import subprocess as subp
 import sys
 
