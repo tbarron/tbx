@@ -29,6 +29,28 @@ def test_zlint():
 
 
 # -----------------------------------------------------------------------------
+def test_abspath():
+    """
+    Verify that tbx.abspath() behaves as expected
+    """
+    pytest.dbgfunc()
+    for idx in range(5):
+        fpath = random_path()
+        assert tbx.abspath(fpath) == os.path.abspath(fpath)
+
+
+# -----------------------------------------------------------------------------
+def test_basename():
+    """
+    Verify that tbx.abspath() behaves as expected
+    """
+    pytest.dbgfunc()
+    for idx in range(5):
+        fpath = random_path()
+        assert tbx.basename(fpath) == os.path.basename(fpath)
+
+
+# -----------------------------------------------------------------------------
 def test_chdir_good(tmpdir):
     """
     chdir(a.directory.that.exists) should work. After the with statement, we
@@ -471,6 +493,18 @@ def test_envset_child():
         assert "TBX_TEST=gargantuan" in result
     result = tbx.run("env")
     assert "TBX_TEST=gargantuan" not in result
+
+
+# -----------------------------------------------------------------------------
+def test_exists():
+    """
+    Verify that tbx.exists() behaves as expected
+    """
+    pytest.dbgfunc()
+    for idx in range(5):
+        fpath = random_path()
+        assert tbx.exists(fpath)
+        assert not tbx.exists(fpath + "_nosuch")
 
 
 # -----------------------------------------------------------------------------
