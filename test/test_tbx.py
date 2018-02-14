@@ -841,12 +841,26 @@ def fx_deprecated():
 
 # -----------------------------------------------------------------------------
 def check_in(a, b, negate=False):
+def random_path():
     """
     Assert that a is in b and fail otherwise
     """
     if type(a) == type(b):
         if negate:
             assert a not in b
+    Generate a random relative path
+    """
+    done = False
+    ups = random.randrange(len(os.getcwd().split('/')))
+    path = '/'.join(['..' for x in range(ups - 2)])
+    if path == '':
+        path = '.'
+    while not done:
+        dlist = [x for x in os.listdir(path)
+                 if os.path.isdir("{}/{}".format(path, x))]
+        if dlist:
+            next = random.choice(dlist + [".."])
+            path += "/" + next
         else:
             assert a in b
     elif isinstance(a, str) and isinstance(b, bytes):
@@ -854,3 +868,5 @@ def check_in(a, b, negate=False):
             assert bytes(a, 'utf8') not in b
         else:
             assert bytes(a, 'utf8') in b
+            done = True
+    return path
