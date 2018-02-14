@@ -841,6 +841,17 @@ def rdata():
 
 
 # -----------------------------------------------------------------------------
+@pytest.fixture(autouse=True)
+def fx_calls_debug(request):
+    """
+    Fails if the target test function does not call pytest.dbgfunc()
+    """
+    if 'dbgfunc' not in request.function.__code__.co_names:
+        pytest.fail("Test '{}' does not call pytest.dbgfunc"
+                    "".format(request.function.__code__.co_name))
+
+
+# -----------------------------------------------------------------------------
 @pytest.fixture
 def fx_deprecated():
     """
