@@ -262,7 +262,7 @@ def git_status():
     mstgx = "^[AM].\s"
     mchgx = "^.[AM]\s"
     utrkx = "^\?\?"
-    result = run("git status --porc").strip()
+    result = run("git status --porc").rstrip()
     staged = [re.sub(subx, "", x) for x in result.split("\n")
               if re.match(mstgx, x)]
     unstaged = [re.sub(subx, "", x) for x in result.split("\n")
