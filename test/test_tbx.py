@@ -781,6 +781,23 @@ def test_deployable():
 
 
 # -----------------------------------------------------------------------------
+def check_in(a, b, negate=False):
+    """
+    Assert that a is in b and fail otherwise
+    """
+    if type(a) == type(b):
+        if negate:
+            assert a not in b
+        else:
+            assert a in b
+    elif isinstance(a, str) and isinstance(b, bytes):
+        if negate:
+            assert bytes(a, 'utf8') not in b
+        else:
+            assert bytes(a, 'utf8') in b
+
+
+# -----------------------------------------------------------------------------
 @pytest.fixture
 def ctest(tmpdir):
     """
@@ -840,14 +857,8 @@ def fx_deprecated():
 
 
 # -----------------------------------------------------------------------------
-def check_in(a, b, negate=False):
 def random_path():
     """
-    Assert that a is in b and fail otherwise
-    """
-    if type(a) == type(b):
-        if negate:
-            assert a not in b
     Generate a random relative path
     """
     done = False
@@ -862,11 +873,5 @@ def random_path():
             next = random.choice(dlist + [".."])
             path += "/" + next
         else:
-            assert a in b
-    elif isinstance(a, str) and isinstance(b, bytes):
-        if negate:
-            assert bytes(a, 'utf8') not in b
-        else:
-            assert bytes(a, 'utf8') in b
             done = True
     return path
