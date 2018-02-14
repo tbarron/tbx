@@ -12,6 +12,7 @@ except ImportError:
     file = io.TextIOWrapper
 import subprocess as sproc
 import sys
+import warnings
 from tbx import verinfo
 
 
@@ -77,6 +78,11 @@ def dispatch(mname='__main__', prefix=None, args=None):
     """
     Call a subfunction from module *mname* based on *prefix* and *args*
     """
+    warnings.warn("\n".join(["dispatch is deprecated",
+                             "To ignore this warning, do",
+                             "    warnings.simplefilter('ignore')",
+                             "before calling dispatch_help()"]),
+                  DeprecationWarning)
     if prefix is None:
         sys.exit('*prefix* is required')
     args = args or ('',)
@@ -103,6 +109,11 @@ def dispatch_help(mname='__main__', prefix=None, args=None):
     """
     Standard help function for dispatch-based tool programs
     """
+    warnings.warn("\n".join(["dispatch_help is deprecated",
+                             "To ignore this warning, do",
+                             "    warnings.simplefilter('ignore')",
+                             "before calling dispatch_help()"]),
+                  DeprecationWarning)
     if prefix is None:
         sys.exit('*prefix* is required')
     try:
