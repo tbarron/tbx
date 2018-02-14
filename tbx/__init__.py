@@ -17,6 +17,22 @@ from tbx import verinfo
 
 
 # -----------------------------------------------------------------------------
+def abspath(relpath):
+    """
+    Returns the absolute path of *relpath*
+    """
+    return os.path.abspath(relpath)
+
+
+# -----------------------------------------------------------------------------
+def basename(path):
+    """
+    Returns the basename of *path*
+    """
+    return os.path.basename(path)
+
+
+# -----------------------------------------------------------------------------
 @contextlib.contextmanager
 def chdir(directory):
     """
@@ -187,6 +203,14 @@ def envset(**kwargs):
                 os.environ[name] = prev[name]
             elif os.getenv(name) is not None:
                 del os.environ[name]
+
+
+# -----------------------------------------------------------------------------
+def exists(path):
+    """
+    Return True if *path* exists, else False
+    """
+    return os.path.exists(path)
 
 
 # -----------------------------------------------------------------------------
