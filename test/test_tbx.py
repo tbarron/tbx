@@ -20,6 +20,7 @@ def test_zlint():
     """
     Run flake8 on the payload and test code
     """
+    pytest.dbgfunc()
     # result = tbx.run(u'flake8 tbx test')
     result = subp.Popen(shlex.split("flake8 tbx test"),
                         stdout=subp.PIPE).communicate()[0]
@@ -32,6 +33,7 @@ def test_chdir_good(tmpdir):
     chdir(a.directory.that.exists) should work. After the with statement, we
     should be back where we started.
     """
+    pytest.dbgfunc()
     orig = os.getcwd()
     with tbx.chdir(tmpdir.strpath):
         assert os.getcwd() == tmpdir.strpath
@@ -44,6 +46,7 @@ def test_chdir_nosuchdir(tmpdir):
     chdir(a.directory.that.does.not.exist) should throw an OSError with the
     message 'No such file or directory'.
     """
+    pytest.dbgfunc()
     nosuch = tmpdir.join('foo/bar/somewhere')
     with pytest.raises(OSError) as err:
         with tbx.chdir(nosuch.strpath):
@@ -57,6 +60,7 @@ def test_chdir_rug(tmpdir):
     Trying to chdir out af a non existent directory (i.e., one that was removed
     after we chdir'd into it)
     """
+    pytest.dbgfunc()
     origin = os.getcwd()
     rug = tmpdir.join('foo/bar/nosuch')
     rug.ensure(dir=True)
@@ -304,6 +308,7 @@ def test_dispatch_bad(capsys):
     """
     Calling dispatch with a non-existent function name
     """
+    pytest.dbgfunc()
     with pytest.raises(SystemExit) as err:
         # payload
         tbx.dispatch(mname=__name__, prefix='dtst', args=['bumble', 1, 2, 3])
@@ -344,6 +349,7 @@ def test_envset_new_none():
     """
     Set a new environment variable to None
     """
+    pytest.dbgfunc()
     vname = 'TEST_ENVSET'
     if os.getenv(vname):
         del os.environ[vname]
@@ -357,6 +363,7 @@ def test_envset_new_1():
     """
     Set a single new environment variable
     """
+    pytest.dbgfunc()
     if os.getenv('TEST_ENVSET'):
         del os.environ['TEST_ENVSET']
     with tbx.envset(TEST_ENVSET='foobar'):
@@ -369,6 +376,7 @@ def test_envset_new_2():
     """
     Set multiple new environment variables
     """
+    pytest.dbgfunc()
     vlist = ['TEST_ENVSET', 'TEST_ENVSET_2']
     for varname in vlist:
         if os.getenv(varname):
@@ -398,6 +406,7 @@ def test_envset_old_2():
     """
     Set multiple new environment variables
     """
+    pytest.dbgfunc()
     vlist = ['HOME', 'TERM']
     orig = {}
     for varname in vlist:
@@ -415,6 +424,7 @@ def test_envset_rm():
     """
     Temporarily unset an environment variable
     """
+    pytest.dbgfunc()
     vname = 'TEST_ENVSET_RM'
     origval = 'original value'
     kwa = {vname: None}
@@ -430,6 +440,7 @@ def test_envset_rmset():
     """
     Temporarily set one environment variable and unset another one
     """
+    pytest.dbgfunc()
     keys = ['TEST_ENVSET_RM', 'TEST_ENVSET_SET']
     origval = dict(zip(keys, ['something', 'something else']))
     updval = dict(zip(keys, [None, 'different from the first']))
@@ -479,6 +490,7 @@ def test_expand(inp, exp):
     Note: os.path.expanduser() only expands '~' if it's at the beginning of the
     string (not what I want)
     """
+    pytest.dbgfunc()
     with tbx.envset(HOME='/home/dir', FOO='my home dir = ~', EVAR='value'):
         assert tbx.expand(inp) == exp
 
@@ -488,6 +500,7 @@ def test_fatal_empty():
     """
     fatal(empty message) should throw a SystemExit with some non-empty message
     """
+    pytest.dbgfunc()
     exp = 'Fatal error with no reason specified'
     with pytest.raises(SystemExit) as err:
         tbx.fatal()
@@ -499,6 +512,7 @@ def test_fatal_msg():
     """
     fatal(non-empty message) should throw a SystemExit with the message
     """
+    pytest.dbgfunc()
     msg = 'This is a fatal error message'
     with pytest.raises(SystemExit) as err:
         tbx.fatal(msg)
@@ -510,6 +524,7 @@ def test_fatal_number():
     """
     fatal(non-string) should throw a SystemExit with str(message)
     """
+    pytest.dbgfunc()
     msg = 32.198
     with pytest.raises(SystemExit) as err:
         tbx.fatal(msg)
