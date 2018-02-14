@@ -1,4 +1,9 @@
-## 1.0.6 ... 2018.0212
+## 1.0.7 ...
+
+ * Deprecate dispatch(), dispatch_help() and update tests to verify the
+   deprecation warnings.
+
+## 1.0.6 ... 2018.0212 16:00:08
 
  * Write git functions and use them in test_deployable()
 
