@@ -8,6 +8,7 @@ import shutil
 import io
 import subprocess as subp
 import sys
+import warnings
 
 import pytest
 
@@ -184,19 +185,21 @@ def test_dirname(level):
 
 
 # -----------------------------------------------------------------------------
-def test_dispatch_help_good(capsys):
+def test_dispatch_help_good(capsys, fx_deprecated):
     """
     Dispatch help on a function that exists and has a doc string
     """
     pytest.dbgfunc()
     exp = 'foobar - print a comma delimited argument list'
+    # payload
     tbx.dispatch_help(__name__, 'dtst', ['foobar'])
+    fx_deprecated['message'] = "To ignore this warning"
     out, _ = capsys.readouterr()
     assert exp in out
 
 
 # -----------------------------------------------------------------------------
-def test_dispatch_help_help(capsys):
+def test_dispatch_help_help(capsys, fx_deprecated):
     """
     Dispatch help on help
     """
@@ -204,13 +207,15 @@ def test_dispatch_help_help(capsys):
     exp = ['help - show a list of available commands',
            'With no arguments',
            'With a command as argument']
+    # payload
     tbx.dispatch_help(__name__, 'dtst', ['help'])
+    fx_deprecated['message'] = "To ignore this warning"
     out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
 
 
 # -----------------------------------------------------------------------------
-def test_dispatch_help_multiple(capsys):
+def test_dispatch_help_multiple(capsys, fx_deprecated):
     """
     Dispatch help for multiple topics
     """
@@ -219,7 +224,9 @@ def test_dispatch_help_multiple(capsys):
            'With no arguments',
            'With a command as argument',
            'foobar - print a comma delimited argument list']
+    # payload
     tbx.dispatch_help(__name__, 'dtst', ['foobar', 'help'])
+    fx_deprecated['message'] = "To ignore this warning"
     out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
 
@@ -232,6 +239,7 @@ def test_dispatch_help_noargs(capsys):
     pytest.dbgfunc()
     exp = ['help - show a list of available commands',
            'foobar - print a comma delimited argument list']
+    # payload
     tbx.dispatch_help(__name__, 'dtst')
     out, _ = capsys.readouterr()
     assert all([_ in out for _ in exp])
@@ -245,18 +253,21 @@ def test_dispatch_help_nodoc():
     pytest.dbgfunc()
     exp = 'Function xtst_undocumented is missing a __doc__ string'
     with pytest.raises(SystemExit) as err:
+        # payload
         tbx.dispatch_help(__name__, 'xtst', ['undocumented'])
     assert exp in str(err)
 
 
 # -----------------------------------------------------------------------------
-def test_dispatch_help_nomodule():
+def test_dispatch_help_nomodule(fx_deprecated):
     """
     Dispatch help on a non-existent module
     """
     pytest.dbgfunc()
     exp = 'Module xtest.test_tbx is not in sys.modules'
     with pytest.raises(SystemExit) as err:
+        # payload
+        fx_deprecated['message'] = 'To ignore this warning'
         tbx.dispatch('x' + __name__, 'foo', ['help', 'nosuch'])
     assert exp in str(err)
 
@@ -269,18 +280,21 @@ def test_dispatch_help_nopfx():
     pytest.dbgfunc()
     exp = '*prefix* is required'
     with pytest.raises(SystemExit) as err:
+        # payload
         tbx.dispatch(__name__, args=['help', 'nosuch'])
     assert exp in str(err)
 
 
 # -----------------------------------------------------------------------------
-def test_dispatch_help_nosuch():
+def test_dispatch_help_nosuch(fx_deprecated):
     """
     Dispatch help on a function that does not exist
     """
     pytest.dbgfunc()
     exp = 'Module test.test_tbx has no attribute foo_nosuch'
     with pytest.raises(SystemExit) as err:
+        # payload
+        fx_deprecated['message'] = 'To ignore this warning'
         tbx.dispatch(__name__, 'foo', ['help', 'nosuch'])
     assert exp in str(err)
 
@@ -291,21 +305,22 @@ def test_dispatch_bad(capsys):
     Calling dispatch with a non-existent function name
     """
     with pytest.raises(SystemExit) as err:
-        tbx.dispatch(mname=__name__,
-                     prefix='dtst',
-                     args=['bumble', 1, 2, 3])
+        # payload
+        tbx.dispatch(mname=__name__, prefix='dtst', args=['bumble', 1, 2, 3])
     assert 'Module test.test_tbx has no function dtst_bumble' in str(err)
     out, err = capsys.readouterr()
     assert out == ''
 
 
 # -----------------------------------------------------------------------------
-def test_dispatch_good(capsys):
+def test_dispatch_good(capsys, fx_deprecated):
     """
     Calling dispatch with a good function name
     """
     pytest.dbgfunc()
     argl = ['foobar', 7, 8, 9, 17]
+    fx_deprecated['message'] = 'To ignore this warning'
+    # payload
     tbx.dispatch(__name__, 'dtst', argl)
     out, _ = capsys.readouterr()
     exp = "This is foobar: {0}".format(', '.join([str(_) for _ in argl[1:]]))
@@ -806,6 +821,22 @@ def rdata():
     zen = get_this()
     rdata.exp = [_ for _ in zen.split('\n') if _ != '']
     return rdata
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def fx_deprecated():
+    """
+    Set up and verification for testing deprecated functions
+    """
+    common = {}
+    warnings.simplefilter('default')
+    with warnings.catch_warnings(record=True) as wrn:
+        yield common
+        assert 0 < len(wrn)
+        assert issubclass(wrn[-1].category, DeprecationWarning)
+        assert common['message'] in str(wrn[-1].message)
+    warnings.resetwarnings()
 
 
 # -----------------------------------------------------------------------------
