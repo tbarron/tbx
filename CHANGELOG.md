@@ -1,7 +1,12 @@
 ## 1.0.7 ...
 
+ * Add tests and support for tbx.abspath(), tbx.basename(), and
+   tbx.exists(). (Requires function random_path for testing.)
+ * Ensure all tests are debuggable with --dbg
  * Deprecate dispatch(), dispatch_help() and update tests to verify the
    deprecation warnings.
+ * Bug in git_status due to loss of meaningful leading whitespace in 'git
+   status --porc' output.
 
 ## 1.0.6 ... 2018.0212 16:00:08
 
