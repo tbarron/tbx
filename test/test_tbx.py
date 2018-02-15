@@ -286,7 +286,7 @@ def test_dispatch_help_nodoc():
 
 
 # -----------------------------------------------------------------------------
-def test_dispatch_help_nomodule(fx_deprecated):
+def test_dispatch_help_nomodule():
     """
     Dispatch help on a non-existent module
     """
@@ -294,7 +294,6 @@ def test_dispatch_help_nomodule(fx_deprecated):
     exp = 'Module xtest.test_tbx is not in sys.modules'
     with pytest.raises(SystemExit) as err:
         # payload
-        fx_deprecated['message'] = 'To ignore this warning'
         tbx.dispatch('x' + __name__, 'foo', ['help', 'nosuch'])
     assert exp in str(err)
 
