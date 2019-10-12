@@ -1,7 +1,10 @@
-## 1.0.8 ...
+## 1.0.9 ...
+
+ * Remove version.py from top level directory
+
+## 1.0.8 ... 2019.1012 09:51:00
 
  * Update setup.py, tbx/__init__.py, and tests to import verinfo from tbx
- * Remove version.py from top level directory
 
 ## 1.0.7 ... 2018.0215 06:54:41
 
