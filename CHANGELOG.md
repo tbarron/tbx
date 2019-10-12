@@ -1,4 +1,9 @@
-## 1.0.7 ...
+## 1.0.8 ...
+
+ * Update setup.py, tbx/__init__.py, and tests to import verinfo from tbx
+ * Remove version.py from top level directory
+
+## 1.0.7 ... 2018.0215 06:54:41
 
  * Add tests and support for tbx.abspath(), tbx.basename(), and
    tbx.exists(). (Requires function random_path for testing.)
