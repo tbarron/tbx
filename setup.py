@@ -1,4 +1,4 @@
-import version
+from tbx import verinfo
 try:
     from setuptools import setup
 except ImportError:
@@ -21,7 +21,7 @@ test_requirements = [
 
 setup(
     name='tbx',
-    version=version._v,
+    version=verinfo._v,
     description="toolbox",
     # long_description=readme,
     author="Tom Barron",
