@@ -1,3 +1,9 @@
+## 1.1.5 ...
+
+ * Avoid "import this" to get the Zen of Python -- just hardcode it
+   internally.
+ * Remove obsolete imports
+
 ## 1.1.4 ... 2019-10-13 15:00:47
 
  * Don't build for Python 2.6.
