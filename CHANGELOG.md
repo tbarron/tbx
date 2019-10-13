@@ -1,3 +1,7 @@
+## 1.1.3 ... 2019-10-13 14:37:28
+
+ * Update .travis.yml to only build tagged versions and branch 'travis'.
+
 ## 1.1.2 ... 2019-10-13 10:17:10
 
  * Back in 2018, I wrote random_path() to generate random relative paths
