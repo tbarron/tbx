@@ -358,8 +358,8 @@ def test_exists(tmpdir):
     exfile = tmpdir.join("exists")
     exfile.write("This file exists")
     nsfile = tmpdir.join("nosuch")
-    assert tbx.exists(exfile)
-    assert tbx.exists(nsfile) is False
+    assert tbx.exists(str(exfile))
+    assert tbx.exists(str(nsfile)) is False
 
 
 # -----------------------------------------------------------------------------
@@ -727,7 +727,7 @@ def get_this():
             rval = get_this.zen
             return rval
         except AttributeError:
-            buf = io.StringIO('w')
+            buf = io.StringIO()
             orig = sys.stdout
             sys.stdout = buf
             import this    # noqa
