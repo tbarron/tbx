@@ -1,3 +1,7 @@
+## 1.1.1 ... 2019-10-13 09:44:51
+
+ * On Travis, only build branches 'master' and 'travis'
+
 ## 1.1.0 ... 2019-10-13 09:34:56
 
  * Remove fx_deprecated, the tests that used it, and the old tbx.dispatch()
