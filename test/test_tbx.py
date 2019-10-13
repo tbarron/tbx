@@ -761,8 +761,7 @@ def rdata():
     """
     Set up for run tests
     """
-    zen = get_this()
-    rdata.exp = [_ for _ in zen.split('\n') if _ != '']
+    rdata.exp = get_this()
     return rdata
 
 
