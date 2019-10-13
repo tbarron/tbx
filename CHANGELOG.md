@@ -1,4 +1,12 @@
-## 1.0.9 ...
+## 1.1.0 ... 2019-10-13 09:34:56
+
+ * Remove fx_deprecated, the tests that used it, and the old tbx.dispatch()
+   functionality the tests covered
+ * Tweaks to keep flake happy with the code quality
+    * Remove an unused module (warnings)
+    * Prefix strings containing escapes with 'r'
+
+## 1.0.9 ... 2019-10-12 09:57:08
 
  * Remove version.py from top level directory
 
