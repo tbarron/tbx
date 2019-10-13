@@ -282,10 +282,10 @@ def git_status():
     Run 'git status --porc' and return: 1) a list of untracked files, 2) a list
     of unstaged updates, and 3) a list of staged but uncommitted updates.
     """
-    subx = "^[AM? ][AM? ]\s"
-    mstgx = "^[AM].\s"
-    mchgx = "^.[AM]\s"
-    utrkx = "^\?\?"
+    subx = r"^[AM? ][AM? ]\s"
+    mstgx = r"^[AM].\s"
+    mchgx = r"^.[AM]\s"
+    utrkx = r"^\?\?"
     result = run("git status --porc").rstrip()
     staged = [re.sub(subx, "", x) for x in result.split("\n")
               if re.match(mstgx, x)]

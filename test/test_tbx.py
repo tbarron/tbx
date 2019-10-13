@@ -802,7 +802,7 @@ def test_version():
     Verify that tbx.version() returns a valid version string
     """
     pytest.dbgfunc()
-    assert re.match("\d\.\d\.\d", tbx.version())
+    assert re.match(r"\d\.\d\.\d", tbx.version())
     assert tbx.version() == tbx.verinfo._v
 
 
