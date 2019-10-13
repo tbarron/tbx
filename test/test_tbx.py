@@ -6,12 +6,9 @@ import re
 import shlex
 import shutil
 import io
-import random
 import subprocess as subp
 import sys
-
 import pytest
-
 import tbx
 
 
@@ -27,25 +24,28 @@ def test_zlint():
 
 
 # -----------------------------------------------------------------------------
-def test_abspath():
+def test_abspath(tmpdir):
     """
     Verify that tbx.abspath() behaves as expected
     """
     pytest.dbgfunc()
-    for idx in range(5):
-        fpath = random_path()
-        assert tbx.abspath(fpath) == os.path.abspath(fpath)
+    nib = tmpdir.join("testfile")
+    nib.write("This is the test file")
+    with tbx.chdir(tmpdir.strpath):
+        assert tbx.abspath("./testfile") == nib.strpath
 
 
 # -----------------------------------------------------------------------------
-def test_basename():
+def test_basename(tmpdir):
     """
     Verify that tbx.abspath() behaves as expected
     """
     pytest.dbgfunc()
-    for idx in range(5):
-        fpath = random_path()
-        assert tbx.basename(fpath) == os.path.basename(fpath)
+    fname = "testfile"
+    tf = tmpdir.join(fname)
+    tf.write("{} exists".format(fname))
+    assert tbx.basename(tf.strpath) == fname
+    assert tbx.basename(tf.strpath) == os.path.basename(tf.strpath)
 
 
 # -----------------------------------------------------------------------------
@@ -350,15 +350,16 @@ def test_envset_child():
 
 
 # -----------------------------------------------------------------------------
-def test_exists():
+def test_exists(tmpdir):
     """
     Verify that tbx.exists() behaves as expected
     """
     pytest.dbgfunc()
-    for idx in range(5):
-        fpath = random_path()
-        assert tbx.exists(fpath)
-        assert not tbx.exists(fpath + "_nosuch")
+    exfile = tmpdir.join("exists")
+    exfile.write("This file exists")
+    nsfile = tmpdir.join("nosuch")
+    assert tbx.exists(exfile)
+    assert tbx.exists(nsfile) is False
 
 
 # -----------------------------------------------------------------------------
@@ -754,24 +755,3 @@ def fx_calls_debug(request):
     if 'dbgfunc' not in request.function.__code__.co_names:
         pytest.fail("Test '{}' does not call pytest.dbgfunc"
                     "".format(request.function.__code__.co_name))
-
-
-# -----------------------------------------------------------------------------
-def random_path():
-    """
-    Generate a random relative path
-    """
-    done = False
-    ups = random.randrange(len(os.getcwd().split('/')))
-    path = '/'.join(['..' for x in range(ups - 2)])
-    if path == '':
-        path = '.'
-    while not done:
-        dlist = [x for x in os.listdir(path)
-                 if os.path.isdir("{}/{}".format(path, x))]
-        if dlist:
-            next = random.choice(dlist + [".."])
-            path += "/" + next
-        else:
-            done = True
-    return path
