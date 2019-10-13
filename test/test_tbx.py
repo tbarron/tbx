@@ -757,22 +757,6 @@ def fx_calls_debug(request):
 
 
 # -----------------------------------------------------------------------------
-# @pytest.fixture
-# def fx_deprecated():
-#     """
-#     Set up and verification for testing deprecated functions
-#     """
-#     common = {}
-#     warnings.simplefilter('default')
-#     with warnings.catch_warnings(record=True) as wrn:
-#         yield common
-#         assert 0 < len(wrn)
-#         assert issubclass(wrn[-1].category, DeprecationWarning)
-#         assert common['message'] in str(wrn[-1].message)
-#     warnings.resetwarnings()
-
-
-# -----------------------------------------------------------------------------
 def random_path():
     """
     Generate a random relative path
