@@ -7,7 +7,6 @@ import shlex
 import shutil
 import io
 import subprocess as subp
-import sys
 import pytest
 import tbx
 
