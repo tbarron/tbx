@@ -1,3 +1,12 @@
+## 1.1.2 ... 2019-10-13 10:17:10
+
+ * Back in 2018, I wrote random_path() to generate random relative paths
+   for testing tbx.abspath(), tbx.exists(), and tbx.basename(). This was
+   fine on my machine where I own all the files. It was not such a good
+   idea on, say, Travis' (the CI service) machines where my code has no
+   business peeking over into the directories of other processes. I have
+   rewritten those tests to behave more responsibly and predictably.
+
 ## 1.1.1 ... 2019-10-13 09:52:00
 
  * On Travis, only build branches 'master' and 'travis'
