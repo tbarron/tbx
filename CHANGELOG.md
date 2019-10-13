@@ -1,8 +1,9 @@
-## 1.1.5 ...
+## 1.1.5 ... 2019-10-13 16:54:24
 
  * Avoid "import this" to get the Zen of Python -- just hardcode it
    internally.
- * Remove obsolete imports
+ * Remove obsolete imports.
+ * Update .travis.yml to drop support for Python 2.7.
 
 ## 1.1.4 ... 2019-10-13 15:00:47
 
