@@ -9,7 +9,7 @@ import io
 import random
 import subprocess as subp
 import sys
-import warnings
+# import warnings
 
 import pytest
 
