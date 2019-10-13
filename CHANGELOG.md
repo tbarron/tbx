@@ -1,3 +1,10 @@
+## 1.1.4 ... 2019-10-13 15:00:47
+
+ * Don't build for Python 2.6.
+ * Fix call to io.StringIO in test_tbx.get_this() to not attempt to
+   initialize the StringIO object -- Python 2.7 was complaining about this.
+ * Stringify the arguments to tbx.exists() to keep Python 2.7 happy.
+
 ## 1.1.3 ... 2019-10-13 14:37:28
 
  * Update .travis.yml to only build tagged versions and branch 'travis'.
