@@ -3,6 +3,7 @@ Toolbox
 """
 import contextlib
 import os
+import os.path as osp
 import re
 import shlex
 try:
@@ -20,7 +21,7 @@ def abspath(relpath):
     """
     Returns the absolute path of *relpath*
     """
-    return os.path.abspath(relpath)
+    return osp.abspath(relpath)
 
 
 # -----------------------------------------------------------------------------
@@ -36,7 +37,7 @@ def basename(path, segments=None):
     if 0 == segs:
         rval = ''
     elif 1 < len(pcomps):
-        rval = os.path.join(*pcomps[-segs:])
+        rval = osp.join(*pcomps[-segs:])
     elif 1 == len(pcomps):
         rval = pcomps[0]
     else:
@@ -139,7 +140,7 @@ def exists(path):
     """
     Return True if *path* exists, else False
     """
-    return os.path.exists(path)
+    return osp.exists(path)
 
 
 # -----------------------------------------------------------------------------
@@ -147,7 +148,7 @@ def expand(path):
     """
     Return path with any '~' or env vars expanded.
     """
-    return _expanduser(os.path.expandvars(path))
+    return _expanduser(osp.expandvars(path))
 
 
 # -----------------------------------------------------------------------------
