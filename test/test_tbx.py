@@ -238,6 +238,12 @@ def test_contents_invalid_fmt(ctest):
     pytest.param(("/", ), {'segments': 3}, "/", id="root, seg=3"),
     pytest.param(("////", ), {'segments': 2}, "////", id="multi root, seg=2"),
 
+    pytest.param(("/a/b/c/d", ), {'level': 3}, "/a", id="normal, level=3"),
+    pytest.param(("", ), {'level': 5}, "", id="empty path, level=5"),
+    pytest.param(("foo", ), {'level': 0}, "foo", id="bare filename, level=0"),
+    pytest.param((".", ), {'level': 7}, "", id="cwd, level=7"),
+    pytest.param(("/", ), {'level': 3}, "/", id="root, level=3"),
+    pytest.param(("////", ), {'level': 2}, "////", id="multi root, level=2"),
 ])
 def test_dirname(arg, kw, exp):
     """
