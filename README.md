@@ -175,10 +175,10 @@
     * Examples
 
             tbx.fatal("The process ends now")
-            
+
         Output:
             The process ends now
-     
+
 
  * git_last_tag()
 
@@ -257,7 +257,7 @@
       contain redirection characters ('>' or '|' at the beginning).
 
     * Examples
-    
+
             # By default, no input expected, output goes to return value
             result = run("echo This is a message")
             assert "This is a message\n" == result
