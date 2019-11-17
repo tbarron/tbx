@@ -14,10 +14,10 @@
 
     * Example
 
-        import tbx
+            import tbx
 
-        testpath = "../dtm"
-        assert tbx.abspath(testpath)) == "/Users/tbarron/prj/github/dtm"
+            testpath = "../dtm"
+            assert tbx.abspath(testpath)) == "/Users/tbarron/prj/github/dtm"
 
  * basename(path, segements=1)
 
