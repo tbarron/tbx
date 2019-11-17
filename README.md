@@ -28,14 +28,22 @@
 
     * Example
 
-        assert tbx.basename(testpath, segments=3) == "prj/github/dtm"
-        assert tbx.basename(testpath, 2) == "github/dtm"
+            assert tbx.basename(testpath, segments=3) == "prj/github/dtm"
+            assert tbx.basename(testpath, 2) == "github/dtm"
 
  * chdir(path)
 
     * Context manager that allows directory excursions that
       automagically return to your starting point upon exiting the
       with scope.
+
+    * Example
+
+            orig = getcwd()
+            with tbx.chdir("/other/directory"):
+                assert "/other/directory" == getcwd()
+                ... do work in "/other/directory"
+            assert orig == getcwd()
 
  * contents(name, default=None, fmt='str', sep='\n')
 
@@ -47,6 +55,38 @@
       is passed as anything other than 'list' or 'str', it will be treated
       as if 'str' had been passed.
 
+    * Examples
+
+            from py.path import local
+
+            example = local("testdata")
+            example.write("one\ntwo\nthree\nfour\n")
+
+            # default operation
+            info = tbx.contents("testdata")
+            assert info == "one\ntwo\nthree\nfour\n"
+
+            # return a list rather than a string
+            info = tbx.contents("testdata", fmt='list')
+            assert info == ["one", "two", "three", "four"]
+
+            # return default if file does not exist
+            info = tbx.contents("nosuchfile", default="the file does not exist")
+            assert info == "the file does not exist"
+
+            # but if the file is empty, return an empty string
+            info = tbx.contents("/dev/null", default="the file is empty")
+            assert info == ""
+
+            # alternate separator
+            info = tbx.contents("testdata", fmt='list', sep="t")
+            assert info == ["one\n", "wo\n", "hree\nfour"]
+
+            # alternate separator is a string, not a character class
+            info = tbx.contents("testdata", fmt='list', sep="\nt")
+            assert info == ["one", "wo", "hree\nfour"]
+
+
  * dirname(path, segments=1)
 
     * Return the directory parent of *path*. If *segments* is something
@@ -56,11 +96,27 @@
       power the os.path version does not: the argument *segments* controls
       the number of path components returned.
 
+    * Example
+
+            assert tbx.dirname("/a/b/c/d/e/f") == "/a/b/c/d/e"
+            assert tbx.dirname("/a/b/c/d/e/f", 2) == "/a/b/c/d"
+            assert tbx.dirname("foobar") == "."
+            assert tbx.dirname("/a/b/c/d/e/f", 25) == "/"
+
  * envset(VARNAME=VALUE, ...)
 
     * Context manager that sets one or more environment variables,
       returning them to their original values when control leaves the
       context. Note that VARNAME should not be quoted, but VALUE must be.
+
+    * Example
+
+            orig = getenv("PATH")
+            with tbx.envset(PATH='/somewhere/else'):
+                assert "/somewhere/else" == getenv("PATH")
+                ... do stuff with alternate $PATH ...
+            assert orig == getenv("PATH")
+
 
  * Error(message)
 
@@ -68,11 +124,26 @@
       library and any packages that import it. If *message* is not
       provided, a suitable default failure message is used.
 
+    * Example
+
+            raise Error("this is the error message")
+
+        Output:
+            Traceback (most recent call last):
+              File "<string>", line 1, in <module>
+            tbx.Error: this is the error message
+
  * exists(path)
 
     * Returns True or False to indicate whether *path* exists in the file
       system. But wait! Doesn't os.path.exists() already exist? See the
       discussion of abspath().
+
+    * Example
+
+            assert tbx.exists(tbx.expand("$HOME")) == True
+            assert tbx.exists("/no/such/file/on/this/system") == False
+
 
  * expand(str)
 
@@ -83,6 +154,12 @@
       expanded as part of user expansion. I tried to implement expansion of
       expressions like '~username', but that turned into a can of worms.
 
+    * Example
+
+            assert expand("$HOME") == "/Users/<username>"
+            assert expand("~") == "/Users/<username>"
+
+
  * fatal(msg)
 
     * Print *msg* and exit the process. Wait! Why do we need this when we
@@ -92,27 +169,71 @@
       provide that. Yeah, but so will sys.exit(msg), right? Yes, but if
       we're importing tbx anyway, this may let us avoid importing sys.
 
+    * Example
+
+            tbx.fatal("The process ends now")
+            
+        Output:
+            The process ends now
+     
+
  * git_last_tag()
 
     * Returns the most recently defined tag from a git repo.
+
+    * Example
+
+            assert tbx.git_last_tag() == '1.1.5'
 
  * git_hash(ref=None)
 
     * Returns a hash of *ref* (or HEAD if *ref* is None).
 
+    * Example
+
+            assert tbx.git_hash() == '7cc775ddc499cf97216f7d7135b1b634ce373b21'
+            assert tbx.git_hash('1.1.5') == '7cc775ddc499cf97216f7d7135b1b634ce373b21'
+            assert tbx.git_hash('1.1.3') == '96dd4d888a9292cb5fd3b6b3eace7ef49b3fbf74'
+
+
  * git_current_branch()
 
     * Return the name of the currently active git branch.
+
+    * Example
+
+            assert tbx.git_current_branch() == 'edit-readme'
 
  * git_status()
 
     * Return 1) a list of staged but uncommitted updates, 2) a list of
       unstaged updates, and 3) a list of untracked files,
 
+    * Example
+
+            assert tbx.git_status() == (['CHANGELOG.md'], # staged, uncommitted
+                                        ['README.md'],    # updated, unstaged
+                                        ['.startup'])     # untracked, not in git
+
  * revnumerate(sequence)
 
     * Enumerate *sequence* in reverse. The numbers count down from
       len(*sequence*)-1 to 0.
+
+    * Example
+
+            import string
+
+            last = None
+            count_up = 0
+            for idx, item in revnumerate(string.ascii_uppercase):
+                if last:
+                    assert idx = last - 1
+                assert item == string.ascii_uppercase[idx]
+                assert idx == len(string.ascii_uppercase) - count_up
+                count_up += 1
+                last = idx
+
 
  * run(cmd, input={str|StringIO|fd|file},
             output={str|StringIO|fd|file})
@@ -132,200 +253,71 @@
       Note that run cannot write directly to the string if it does not
       contain redirection characters ('>' or '|' at the beginning).
 
+    * Examples
+    
+            # By default, no input expected, output goes to return value
+            result = run("echo This is a message")
+            assert "This is a message\n" == result
+
+            # output=<str>, redirect to a file
+            result = run("echo This is a message", output="> myfile")
+            # "This is a message" written to file myfile
+
+            # output=<str>, redirect to a command
+            result = run("echo This is a message", output="| cut -c1-14")
+            assert "This is a mess\n" == result
+
+            # output=<StringIO>
+            StringIO abc
+            run("echo This is a message", output=abc)
+            assert abc.getvalue() == "This is a message\n"
+
+            # output=<file descriptor>
+            outfile = open("outfile", 'w')
+            run("echo This is a message", output=outfile.fileno())
+            # "This is a message\n" written to file outfile
+
+            # output=<file object>
+            outfile = open("outfile", 'w')
+            run("echo This is a message", output=outfile)
+            # "This is a message\n" written to file outfile
+
+            # input=<str>, use content of string
+            result = run("cat", input="This is a message\n")
+            assert "This is a message\n" == result
+
+            # input=<str>, read a file
+            infile = local("infile")
+            infile.write("This is a message\n")
+            result = run("cat", input="< {}".format(infile.strpath))
+            assert "This is a message\n" == result
+
+            # input=<str>, input piped from a command
+            result = run("cat", input="echo This is a message |")
+            assert "This is a message\n" == result
+
+            StringIO abc("This is a message\n")
+            result = run("cat", input=abc)
+            assert "This is a message\n" == result
+
+            # input=<file-descriptor>
+            infile = local("infile")
+            infile.write("This is a message\n")
+            f = open(infile.strpath, 'r')
+            result = run("cat", input=f.fileno())
+            assert "This is a message\n" == result
+
+            # input=<file-object>
+            result = run("cat", input=open(infile.strpath, 'r'))
+            assert "This is a message\n" == result
+
  * version()
 
     * Return the version of tbx.
 
-### Examples
+    * Example
 
-  * abspath(relpath)
-
-        import tbx
-
-        testpath = "../dtm"
-        assert tbx.abspath(testpath)) == "/Users/tbarron/prj/github/dtm"
-
-  * basename(path, segments=1)
-
-        assert tbx.basename(testpath, segments=3) == "prj/github/dtm"
-        assert tbx.basename(testpath, 2) == "github/dtm"
-
-  * chdir(PATH)
-
-        orig = getcwd()
-        with tbx.chdir("/other/directory"):
-            assert "/other/directory" == getcwd()
-            ... do work in "/other/directory"
-        assert orig == getcwd()
-
-
- * contents(FILENAME, default=None, fmt={'str'|'list'}, sep='\n')
-
-        from py.path import local
-
-        example = local("testdata")
-        example.write("one\ntwo\nthree\nfour\n")
-
-        # default operation
-        info = tbx.contents("testdata")
-        assert info == "one\ntwo\nthree\nfour\n"
-
-        # return a list rather than a string
-        info = tbx.contents("testdata", fmt='list')
-        assert info == ["one", "two", "three", "four"]
-
-        # return default if file does not exist
-        info = tbx.contents("nosuchfile", default="the file does not exist")
-        assert info == "the file does not exist"
-
-        # but if the file is empty, return an empty string
-        info = tbx.contents("/dev/null", default="the file is empty")
-        assert info == ""
-
-        # alternate separator
-        info = tbx.contents("testdata", fmt='list', sep="t")
-        assert info == ["one\n", "wo\n", "hree\nfour"]
-
-        # alternate separator is a string, not a character class
-        info = tbx.contents("testdata", fmt='list', sep="\nt")
-        assert info == ["one", "wo", "hree\nfour"]
-
-
- * dirname(PATH, level=1)
-
-        assert tbx.dirname("/a/b/c/d/e/f") == "/a/b/c/d/e"
-        assert tbx.dirname("/a/b/c/d/e/f", 2) == "/a/b/c/d"
-        assert tbx.dirname("foobar") == "."
-        assert tbx.dirname("/a/b/c/d/e/f", 25) == "/"
-
-
-  * envset(VARNAME=VALUE, ...)
-
-        orig = getenv("PATH")
-        with tbx.envset(PATH='/somewhere/else'):
-            assert "/somewhere/else" == getenv("PATH")
-            ... do stuff with alternate $PATH ...
-        assert orig == getenv("PATH")
-
-
-  * raise Error('this is the error message')
-
-        Traceback (most recent call last):
-          File "<string>", line 1, in <module>
-        tbx.Error: this is the error message
-
-
-  * exists(path)
-
-        assert tbx.exists(tbx.expand("$HOME")) == True
-        assert tbx.exists("/no/such/file/on/this/system") == False
-
-
-  * expand("HOME = $HOME = ~")
-
-        "HOME = /usr/home/username = /usr/home/username"
-
-
-  * fatal(MSG)
-
-        tbx.fatal("The process ends now")
-
-
-  * git_last_tag()
-
-        assert tbx.git_last_tag() == '1.1.5'
-
-
-  * git_hash(ref=None)
-
-        assert tbx.git_hash() == '7cc775ddc...'
-        assert tbx.git_hash('1.1.5') == '7cc775ddc...'
-        assert tbx.git_hash('1.1.3') == '423543dd9...'
-
-
-  * git_current_branch()
-
-        assert tbx.git_current_branch() == 'edit-readme'
-
-
-  * git_status()
-
-        assert tbx.git_status() == (['CHANGELOG.md'], # staged, uncommitted
-                                    ['README.md'],    # updated, unstaged
-                                    ['.startup'])     # untracked, not in git
-
-
-  * revnumerate(SEQUENCE)
-
-        import string
-
-        last = None
-        count_up = 0
-        for idx, item in revnumerate(string.ascii_uppercase):
-            if last:
-                assert idx = last - 1
-            assert item == string.ascii_uppercase[idx]
-            assert idx == len(string.ascii_uppercase) - count_up
-            count_up += 1
-            last = idx
-
-  * run(CMD, input={str|StringIO|fd|file}, output={str|StringIO|fd|file})
-
-        # By default, no input expected, output goes to return value
-        result = run("echo This is a message")
-        assert "This is a message\n" == result
-
-        # output=<str>, redirect to a file
-        result = run("echo This is a message", output="> myfile")
-        # "This is a message" written to file myfile
-
-        # output=<str>, redirect to a command
-        result = run("echo This is a message", output="| cut -c1-14")
-        assert "This is a mess\n" == result
-
-        # output=<StringIO>
-        StringIO abc
-        run("echo This is a message", output=abc)
-        assert abc.getvalue() == "This is a message\n"
-
-        # output=<file descriptor>
-        outfile = open("outfile", 'w')
-        run("echo This is a message", output=outfile.fileno())
-        # "This is a message\n" written to file outfile
-
-        # output=<file object>
-        outfile = open("outfile", 'w')
-        run("echo This is a message", output=outfile)
-        # "This is a message\n" written to file outfile
-
-        # input=<str>, use content of string
-        result = run("cat", input="This is a message\n")
-        assert "This is a message\n" == result
-
-        # input=<str>, read a file
-        infile = local("infile")
-        infile.write("This is a message\n")
-        result = run("cat", input="< {}".format(infile.strpath))
-        assert "This is a message\n" == result
-
-        # input=<str>, input piped from a command
-        result = run("cat", input="echo This is a message |")
-        assert "This is a message\n" == result
-
-        StringIO abc("This is a message\n")
-        result = run("cat", input=abc)
-        assert "This is a message\n" == result
-
-        # input=<file-descriptor>
-        infile = local("infile")
-        infile.write("This is a message\n")
-        f = open(infile.strpath, 'r')
-        result = run("cat", input=f.fileno())
-        assert "This is a message\n" == result
-
-        # input=<file-object>
-        result = run("cat", input=open(infile.strpath, 'r'))
-        assert "This is a message\n" == result
+            assert tbx.version() == "1.1.6"
 
 
 ## Running tests
