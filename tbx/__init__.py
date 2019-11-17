@@ -90,15 +90,21 @@ def contents(name=None, default=None, fmt='str', sep=None):
 
 
 # -----------------------------------------------------------------------------
-def dirname(path, level=None):
+def dirname(path, segments=None, level=None):
     """
-    Peel off *level* tails from path
+    Peel off *segments* tails from path. Argument level is DEPRECATED but will
+    continue to be supported for a few releases for backward compatibility.
     """
-    if level is None:
-        level = 1
+    if segments is None and level is None:
+        segs = 1
+    elif segments is None and level is not None:
+        segs = level
+    elif segments is not None:
+        segs = segments
+
     rval = path
-    for _ in range(0, level):
-        rval = os.path.dirname(rval)
+    for _ in range(0, segs):
+        rval = osp.dirname(rval)
     return rval
 
 
