@@ -12,12 +12,12 @@
       versions and if I want those, having abspath() here may let me avoid
       having to import os.path.
 
-    * Example
+    * Examples
 
             import tbx
 
-            testpath = "../dtm"
-            assert tbx.abspath(testpath)) == "/Users/tbarron/prj/github/dtm"
+            apath = tbx.abspath("../dtm")
+            assert apath == "/Users/tbarron/prj/github/dtm"
 
  * basename(path, segements=1)
 
@@ -26,10 +26,10 @@
       basename() provides some power the os.path version does not: the
       argument *segments* controls the number of path components returned.
 
-    * Example
+    * Examples
 
-            assert tbx.basename(testpath, segments=3) == "prj/github/dtm"
-            assert tbx.basename(testpath, 2) == "github/dtm"
+            assert tbx.basename(apath, segments=3) == "prj/github/dtm"
+            assert tbx.basename(apath, 2) == "github/dtm"
 
  * chdir(path)
 
@@ -37,7 +37,7 @@
       automagically return to your starting point upon exiting the
       with scope.
 
-    * Example
+    * Examples
 
             orig = getcwd()
             with tbx.chdir("/other/directory"):
@@ -94,14 +94,17 @@
       But wait! Doesn't os.path.dirname() already exist? Well, yes. See the
       description of abspath above. Also, this dirname() provides some
       power the os.path version does not: the argument *segments* controls
-      the number of path components returned.
+      the number of path components returned. (NOTE: for backward
+      compatibility, dirname will accept argument *level* as a synonym for
+      *segments*.)
 
-    * Example
+    * Examples
 
             assert tbx.dirname("/a/b/c/d/e/f") == "/a/b/c/d/e"
-            assert tbx.dirname("/a/b/c/d/e/f", 2) == "/a/b/c/d"
+            assert tbx.dirname("/a/b/c/d/e/f", segments=2) == "/a/b/c/d"
             assert tbx.dirname("foobar") == "."
             assert tbx.dirname("/a/b/c/d/e/f", 25) == "/"
+            assert tbx.dirname("/a/b/c/d/e/f", level=4) == "/a/b"
 
  * envset(VARNAME=VALUE, ...)
 
@@ -124,7 +127,7 @@
       library and any packages that import it. If *message* is not
       provided, a suitable default failure message is used.
 
-    * Example
+    * Examples
 
             raise Error("this is the error message")
 
@@ -139,7 +142,7 @@
       system. But wait! Doesn't os.path.exists() already exist? See the
       discussion of abspath().
 
-    * Example
+    * Examples
 
             assert tbx.exists(tbx.expand("$HOME")) == True
             assert tbx.exists("/no/such/file/on/this/system") == False
@@ -154,7 +157,7 @@
       expanded as part of user expansion. I tried to implement expansion of
       expressions like '~username', but that turned into a can of worms.
 
-    * Example
+    * Examples
 
             assert expand("$HOME") == "/Users/<username>"
             assert expand("~") == "/Users/<username>"
@@ -169,7 +172,7 @@
       provide that. Yeah, but so will sys.exit(msg), right? Yes, but if
       we're importing tbx anyway, this may let us avoid importing sys.
 
-    * Example
+    * Examples
 
             tbx.fatal("The process ends now")
             
@@ -181,7 +184,7 @@
 
     * Returns the most recently defined tag from a git repo.
 
-    * Example
+    * Examples
 
             assert tbx.git_last_tag() == '1.1.5'
 
@@ -189,7 +192,7 @@
 
     * Returns a hash of *ref* (or HEAD if *ref* is None).
 
-    * Example
+    * Examples
 
             assert tbx.git_hash() == '7cc775ddc499cf97216f7d7135b1b634ce373b21'
             assert tbx.git_hash('1.1.5') == '7cc775ddc499cf97216f7d7135b1b634ce373b21'
@@ -200,7 +203,7 @@
 
     * Return the name of the currently active git branch.
 
-    * Example
+    * Examples
 
             assert tbx.git_current_branch() == 'edit-readme'
 
@@ -209,7 +212,7 @@
     * Return 1) a list of staged but uncommitted updates, 2) a list of
       unstaged updates, and 3) a list of untracked files,
 
-    * Example
+    * Examples
 
             assert tbx.git_status() == (['CHANGELOG.md'], # staged, uncommitted
                                         ['README.md'],    # updated, unstaged
@@ -220,7 +223,7 @@
     * Enumerate *sequence* in reverse. The numbers count down from
       len(*sequence*)-1 to 0.
 
-    * Example
+    * Examples
 
             import string
 
@@ -315,7 +318,7 @@
 
     * Return the version of tbx.
 
-    * Example
+    * Examples
 
             assert tbx.version() == "1.1.6"
 
