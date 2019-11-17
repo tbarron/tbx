@@ -1,3 +1,14 @@
+## 1.1.6 ... 2019-11-17 09:21:39
+
+ * Add tests and payload for segments argument in tbx.basename() and
+   tbx.dirname()
+ * Argument 'level' in tbx.dirname() is deprecated in favor of 'segments'.
+   Argument 'level' will be removed in release 1.2.0.
+ * Document missing functions in README.md, moving examples up close to
+   their respective function descriptions
+ * Add list of projects that depend on this one to the bottom of README.md
+
+
 ## 1.1.5 ... 2019-10-13 16:54:24
 
  * Avoid "import this" to get the Zen of Python -- just hardcode it
