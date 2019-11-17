@@ -210,21 +210,41 @@ def test_contents_invalid_fmt(ctest):
 
 
 # -----------------------------------------------------------------------------
-@pytest.mark.parametrize('level', [0, 1, 2, None])
-def test_dirname(level):
+@pytest.mark.parametrize("arg, kw, exp", [
+    pytest.param(("/a/b/c/d/e", 0), {}, "/a/b/c/d/e", id="/a/b/c/d/e, s=0"),
+    pytest.param(("/a/b/c/d/e", 1), {}, "/a/b/c/d", id="/a/b/c/d/e, s=1"),
+    pytest.param(("/a/b/c/d/e", 2), {}, "/a/b/c", id="/a/b/c/d/e, s=2"),
+    pytest.param(("/a/b/c/d/e", None), {}, "/a/b/c/d",
+                 id="/a/b/c/d/e, s=None"),
+
+    pytest.param(("/a/b/c/d", ), {}, "/a/b/c", id="normal absolute path"),
+    pytest.param(("", ), {}, "", id="empty path"),
+    pytest.param(("foo", ), {}, "", id="bare filename"),
+    pytest.param((".", ), {}, "", id="cwd"),
+    pytest.param(("/", ), {}, "/", id="root"),
+    pytest.param(("////", ), {}, "////", id="multi root"),
+
+    pytest.param(("/a/b/c/d", 2), {}, "/a/b", id="normal, 2"),
+    pytest.param(("", 3), {}, "", id="empty path, 3"),
+    pytest.param(("foo", 4), {}, "", id="bare filename, 4"),
+    pytest.param((".", 0), {}, ".", id="cwd, 0"),
+    pytest.param(("/", 3), {}, "/", id="root, 3"),
+    pytest.param(("////", 2), {}, "////", id="multi root, 2"),
+
+    pytest.param(("/a/b/c/d", ), {'segments': 3}, "/a", id="normal, seg=3"),
+    pytest.param(("", ), {'segments': 5}, "", id="empty path, seg=5"),
+    pytest.param(("foo", ), {'segments': 0}, "foo", id="bare filename, seg=0"),
+    pytest.param((".", ), {'segments': 7}, "", id="cwd, seg=7"),
+    pytest.param(("/", ), {'segments': 3}, "/", id="root, seg=3"),
+    pytest.param(("////", ), {'segments': 2}, "////", id="multi root, seg=2"),
+
+])
+def test_dirname(arg, kw, exp):
     """
-    Default level for dirname is 0
+    Test tbx.dirname()
     """
     pytest.dbgfunc()
-    inp = '/a/b/c/d/e'
-    exp = inp[:]
-    if level is None:
-        exp = os.path.dirname(exp)
-    else:
-        for _ in range(level):
-            exp = os.path.dirname(exp)
-    result = tbx.dirname(inp, level=level)
-    assert result == exp
+    assert tbx.dirname(*arg, **kw) == exp
 
 
 # -----------------------------------------------------------------------------
