@@ -2,56 +2,117 @@
 
 ## Functions (see Examples below)
 
+ * abspath(relpath)
+
+    * Returns the absolute path of whatever *relpath* points at. But wait!
+      Doesn't os.path.abspath() already exist? Well, yes. My reasons for
+      putting it here are: 1) "tbx.abspath" is shorter than
+      "os.path.abspath", and 2) related functions dirname() and basename()
+      in this package add functionality not available from the os.path
+      versions and if I want those, having abspath() here may let me avoid
+      having to import os.path.
+
+    * Example
+
+        import tbx
+
+        testpath = "../dtm"
+        assert tbx.abspath(testpath)) == "/Users/tbarron/prj/github/dtm"
+
+ * basename(path, segements=1)
+
+    * Returns the last component of *path*. But wait! Doesn't
+      os.path.basename() already exist? Well, yes. See above. Also, this
+      basename() provides some power the os.path version does not: the
+      argument *segments* controls the number of path components returned.
+
+    * Example
+
+        assert tbx.basename(testpath, segments=3) == "prj/github/dtm"
+        assert tbx.basename(testpath, 2) == "github/dtm"
+
  * chdir(path)
+
     * Context manager that allows directory excursions that
       automagically return to your starting point upon exiting the
       with scope.
 
  * contents(name, default=None, fmt='str', sep='\n')
-    * Return the contents of a file. If the file does not exist,
-      return *default*. If *fmt* is 'list', the return value is a list
-      of strings. If *fmt* is 'str', the return value is a string. If
-      *sep* is not specified and *fmt* is 'list', the file content
-      will be split on newlines ('\n')
 
- * dirname(path, level=1)
-    * Return the directory parent of *path*. If *level* is something
-      other 1, *level* path components are removed from the path.
+    * Return the contents of a file. If the file does not exist, return
+      *default*. The *fmt* argument can be 'list' or 'str'. If *fmt* is
+      'list', the return value is a list of strings and *sep* is used to
+      split the file contents, with its default being newline. If *fmt* is
+      'str', the return value is a string and *sep* is ignored. If *fmt*
+      is passed as anything other than 'list' or 'str', it will be treated
+      as if 'str' had been passed.
 
- * dispatch(mname, prefix, args)
-    * Introspect module *mname* for a callable named *prefix*_*args[0]*. If
-      found, call it with arguments *args[1:]*. DEPRECATED: Use
-      docopt_dispatch instead.
+ * dirname(path, segments=1)
 
- * dispatch_help(mname, prefix, args)
-    * Introspect module *mname* and print help info from __doc__
-      strings for callables with names [*prefix*_foo for foo in args].
-      If *args* is empty, print the first line of each __doc__ for all
-      the callables in the module whose name begins with *prefix*.
-      DEPRECATED: Use docopt_dispatch instead.
+    * Return the directory parent of *path*. If *segments* is something
+      other 1, *segments* path components are removed from the end of path.
+      But wait! Doesn't os.path.dirname() already exist? Well, yes. See the
+      description of abspath above. Also, this dirname() provides some
+      power the os.path version does not: the argument *segments* controls
+      the number of path components returned.
 
  * envset(VARNAME=VALUE, ...)
+
     * Context manager that sets one or more environment variables,
       returning them to their original values when control leaves the
-      context.
+      context. Note that VARNAME should not be quoted, but VALUE must be.
 
  * Error(message)
+
     * The Error class provides a simple exception class for use in the tbx
-      library and any packages that import it.
+      library and any packages that import it. If *message* is not
+      provided, a suitable default failure message is used.
+
+ * exists(path)
+
+    * Returns True or False to indicate whether *path* exists in the file
+      system. But wait! Doesn't os.path.exists() already exist? See the
+      discussion of abspath().
 
  * expand(str)
+
     * Expand environment variables in *str*, replacing "$<variable>" with
       the contents of the variable. Replace occurrences of '~' in the
       argument with the contents of $HOME. Variable expansion happens first
       so that any occurrences of '~' in the contents of variables get
-      expanded as part of user expansion.
+      expanded as part of user expansion. I tried to implement expansion of
+      expressions like '~username', but that turned into a can of worms.
 
  * fatal(msg)
-    * Print *msg* and exit the process
+
+    * Print *msg* and exit the process. Wait! Why do we need this when we
+      already have tbx.Error()? Why not just raise tbx.Error(msg)? Well,
+      calling raise tbx.Error() produces a traceback. If what we want is
+      just a clean exit message without a lot of ugly traceback, this will
+      provide that. Yeah, but so will sys.exit(msg), right? Yes, but if
+      we're importing tbx anyway, this may let us avoid importing sys.
+
+ * git_last_tag()
+
+    * Returns the most recently defined tag from a git repo.
+
+ * git_hash(ref=None)
+
+    * Returns a hash of *ref* (or HEAD if *ref* is None).
+
+ * git_current_branch()
+
+    * Return the name of the currently active git branch.
+
+ * git_status()
+
+    * Return 1) a list of staged but uncommitted updates, 2) a list of
+      unstaged updates, and 3) a list of untracked files,
 
  * revnumerate(sequence)
+
     * Enumerate *sequence* in reverse. The numbers count down from
-      len(*sequence*)-1 to 0
+      len(*sequence*)-1 to 0.
 
  * run(cmd, input={str|StringIO|fd|file},
             output={str|StringIO|fd|file})
@@ -60,19 +121,36 @@
       argument will be read and its contents will be written to stdin of
       the command. If a str *input* ends with '|' the argument will be run
       as a command and its output will be written to stdin of the payload
-      command.
+      command. If *input* does not contain either of these characters in
+      those positions, the contents of the string is passed to stdin of the
+      process.
 
     * If *output* is a str that begins with '> ', the command's output will
       be written to the file named in the remainder of the string. If
       *output* is a str beginning with '| ', the commands's output will be
       piped to stdin of the command named in the remainder of the string.
+      Note that run cannot write directly to the string if it does not
+      contain redirection characters ('>' or '|' at the beginning).
 
+ * version()
+
+    * Return the version of tbx.
 
 ### Examples
 
-  * chdir(PATH)
+  * abspath(relpath)
 
         import tbx
+
+        testpath = "../dtm"
+        assert tbx.abspath(testpath)) == "/Users/tbarron/prj/github/dtm"
+
+  * basename(path, segments=1)
+
+        assert tbx.basename(testpath, segments=3) == "prj/github/dtm"
+        assert tbx.basename(testpath, 2) == "github/dtm"
+
+  * chdir(PATH)
 
         orig = getcwd()
         with tbx.chdir("/other/directory"):
@@ -137,6 +215,12 @@
         tbx.Error: this is the error message
 
 
+  * exists(path)
+
+        assert tbx.exists(tbx.expand("$HOME")) == True
+        assert tbx.exists("/no/such/file/on/this/system") == False
+
+
   * expand("HOME = $HOME = ~")
 
         "HOME = /usr/home/username = /usr/home/username"
@@ -144,7 +228,31 @@
 
   * fatal(MSG)
 
-        fatal("The process ends now")
+        tbx.fatal("The process ends now")
+
+
+  * git_last_tag()
+
+        assert tbx.git_last_tag() == '1.1.5'
+
+
+  * git_hash(ref=None)
+
+        assert tbx.git_hash() == '7cc775ddc...'
+        assert tbx.git_hash('1.1.5') == '7cc775ddc...'
+        assert tbx.git_hash('1.1.3') == '423543dd9...'
+
+
+  * git_current_branch()
+
+        assert tbx.git_current_branch() == 'edit-readme'
+
+
+  * git_status()
+
+        assert tbx.git_status() == (['CHANGELOG.md'], # staged, uncommitted
+                                    ['README.md'],    # updated, unstaged
+                                    ['.startup'])     # untracked, not in git
 
 
   * revnumerate(SEQUENCE)
