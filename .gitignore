@@ -6,6 +6,7 @@ tbx.egg-info
 .env
 venv
 .coverage*
+.startup
 .tbx-cov
 .tox
 .#*
