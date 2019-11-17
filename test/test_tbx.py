@@ -35,16 +35,35 @@ def test_abspath(tmpdir):
 
 
 # -----------------------------------------------------------------------------
-def test_basename(tmpdir):
+@pytest.mark.parametrize("arg, kw, exp", [
+    pytest.param(("/a/b/c/d", ), {}, "d", id="normal absolute path"),
+    pytest.param(("", ), {}, "", id="empty path"),
+    pytest.param(("foo", ), {}, "foo", id="bare filename"),
+    pytest.param((".", ), {}, ".", id="cwd"),
+    pytest.param(("/", ), {}, "", id="root"),
+    pytest.param(("////", ), {}, "", id="multi root"),
+
+    pytest.param(("/a/b/c/d", 2), {}, "c/d", id="normal, 2"),
+    pytest.param(("", 3), {}, "", id="empty path, 3"),
+    pytest.param(("foo", 4), {}, "foo", id="bare filename, 4"),
+    pytest.param((".", 0), {}, "", id="cwd, 0"),
+    pytest.param(("/", 3), {}, "", id="root, 3"),
+    pytest.param(("////", 2), {}, "", id="multi root, 2"),
+
+    pytest.param(("/a/b/c/d", ), {'segments': 3}, "b/c/d", id="normal, seg=3"),
+    pytest.param(("", ), {'segments': 5}, "", id="empty path, seg=5"),
+    pytest.param(("foo", ), {'segments': 0}, "", id="bare filename, seg=0"),
+    pytest.param((".", ), {'segments': 7}, ".", id="cwd, seg=7"),
+    pytest.param(("/", ), {'segments': 3}, "", id="root, seg=3"),
+    pytest.param(("////", ), {'segments': 2}, "", id="multi root, seg=2"),
+
+    ])
+def test_basename(arg, kw, exp):
     """
-    Verify that tbx.abspath() behaves as expected
+    Verify that tbx.basename() behaves as expected
     """
     pytest.dbgfunc()
-    fname = "testfile"
-    tf = tmpdir.join(fname)
-    tf.write("{} exists".format(fname))
-    assert tbx.basename(tf.strpath) == fname
-    assert tbx.basename(tf.strpath) == os.path.basename(tf.strpath)
+    assert tbx.basename(*arg, **kw) == exp
 
 
 # -----------------------------------------------------------------------------

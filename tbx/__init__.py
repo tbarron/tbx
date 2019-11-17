@@ -24,11 +24,24 @@ def abspath(relpath):
 
 
 # -----------------------------------------------------------------------------
-def basename(path):
+def basename(path, segments=None):
     """
     Returns the basename of *path*
     """
-    return os.path.basename(path)
+    if segments is None:
+        segs = 1
+    else:
+        segs = segments
+    pcomps = [_ for _ in path.split('/') if _ != '']
+    if 0 == segs:
+        rval = ''
+    elif 1 < len(pcomps):
+        rval = os.path.join(*pcomps[-segs:])
+    elif 1 == len(pcomps):
+        rval = pcomps[0]
+    else:
+        rval = ''
+    return rval
 
 
 # -----------------------------------------------------------------------------
