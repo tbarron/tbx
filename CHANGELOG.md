@@ -1,5 +1,6 @@
-## 1.1.6 ... 2019-11-17 09:21:39
+## 1.1.6 ... 2019-11-17 09:25:15
 
+ * Test both Python 3.6 and 3.8 in continuous integration (on travis)
  * Add tests and payload for segments argument in tbx.basename() and
    tbx.dirname()
  * Argument 'level' in tbx.dirname() is deprecated in favor of 'segments'.
