@@ -346,3 +346,13 @@ With a coverage report showing the lines not tested
     * However, in the case of `output=<str>`, the called run function can't
       assign into the string named as the output argument. The output
       argument can use the string as a redirection expression, but that's all.
+
+## Projects that depend on this one
+
+ * https://github.com/tbarron/backscratcher
+ * https://github.com/tbarron/dtm
+ * https://github.com/tbarron/nldt
+ * https://github.com/tbarron/bearomator
+ * https://github.com/tbarron/editor
+ * https://github.com/tbarron/fx_python
+ * https://github.com/tbarron/pytool
