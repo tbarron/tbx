@@ -56,8 +56,7 @@ def test_abspath(tmpdir):
     pytest.param((".", ), {'segments': 7}, ".", id="cwd, seg=7"),
     pytest.param(("/", ), {'segments': 3}, "", id="root, seg=3"),
     pytest.param(("////", ), {'segments': 2}, "", id="multi root, seg=2"),
-
-    ])
+])
 def test_basename(arg, kw, exp):
     """
     Verify that tbx.basename() behaves as expected
