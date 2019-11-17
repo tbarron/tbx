@@ -5,6 +5,7 @@ DODO*
 tbx.egg-info
 .env
 venv
+venv*
 .coverage*
 .startup
 .tbx-cov
