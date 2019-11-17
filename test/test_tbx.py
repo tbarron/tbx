@@ -89,7 +89,7 @@ def test_chdir_nosuchdir(tmpdir):
     with pytest.raises(OSError) as err:
         with tbx.chdir(nosuch.strpath):
             assert os.getcwd() == tmpdir.strpath
-    assert 'No such file or directory' in str(err)
+    assert 'No such file or directory' in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -107,13 +107,13 @@ def test_chdir_rug(tmpdir):
         with pytest.raises(OSError) as err:
             with tbx.chdir('..'):
                 assert os.getcwd() == origin
-        assert any(['No such file or directory' in str(err),
-                    'Invalid argument' in str(err)])
+        assert any(['No such file or directory' in str(err.value),
+                    'Invalid argument' in str(err.value)])
         with pytest.raises(OSError) as err:
             assert os.getcwd() == rug.strpath
     assert os.getcwd() == origin
-    assert any(['No such file or directory' in str(err),
-                'Invalid argument' in str(err)])
+    assert any(['No such file or directory' in str(err.value),
+                'Invalid argument' in str(err.value)])
 
 
 # -----------------------------------------------------------------------------
@@ -139,8 +139,8 @@ def test_contents_nosuch_nodefault(ctest):
     filename = ctest.data.strpath + 'xxx'
     with pytest.raises(IOError) as err:
         _ = tbx.contents(filename)
-    assert "No such file or directory" in str(err)
-    assert filename in str(err)
+    assert "No such file or directory" in str(err.value)
+    assert filename in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -182,7 +182,8 @@ def test_contents_badfmt(ctest):
     pytest.dbgfunc()
     with pytest.raises(tbx.Error) as err:
         _ = tbx.contents(ctest.data.strpath, fmt='str', sep=r'\s')
-    assert 'Non-default separator is only valid for list format' in str(err)
+    msg = 'Non-default separator is only valid for list format'
+    assert msg in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -194,7 +195,7 @@ def test_contents_badperm(ctest):
     ctest.data.chmod(0000)
     with pytest.raises(tbx.Error) as err:
         _ = tbx.contents(ctest.data.strpath, fmt=str, sep=r'\s')
-    assert "Can't read file {0}".format(ctest.data.strpath) in str(err)
+    assert "Can't read file {0}".format(ctest.data.strpath) in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -205,7 +206,7 @@ def test_contents_invalid_fmt(ctest):
     pytest.dbgfunc()
     with pytest.raises(tbx.Error) as err:
         _ = tbx.contents(ctest.data.strpath, fmt='foobar', sep=r'\s')
-    assert "Error: Invalid format" in str(err)
+    assert "Invalid format" in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -411,7 +412,7 @@ def test_fatal_empty():
     exp = 'Fatal error with no reason specified'
     with pytest.raises(SystemExit) as err:
         tbx.fatal()
-    assert exp in str(err)
+    assert exp in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -423,7 +424,7 @@ def test_fatal_msg():
     msg = 'This is a fatal error message'
     with pytest.raises(SystemExit) as err:
         tbx.fatal(msg)
-    assert msg in str(err)
+    assert msg in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -435,7 +436,7 @@ def test_fatal_number():
     msg = 32.198
     with pytest.raises(SystemExit) as err:
         tbx.fatal(msg)
-    assert str(msg) in str(err)
+    assert str(msg) in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -461,8 +462,8 @@ def test_run_noargs():
     pytest.dbgfunc()
     with pytest.raises(TypeError) as err:
         tbx.run()
-    assert 'run() takes' in str(err) or 'run() missing' in str(err)
-    assert 'argument' in str(err)
+    assert 'run() takes' in str(err.value) or 'run() missing' in str(err.value)
+    assert 'argument' in str(err.value)
 
 
 # -----------------------------------------------------------------------------
@@ -569,7 +570,7 @@ def test_run_cmd_ostr():
     pytest.dbgfunc()
     with pytest.raises(tbx.Error) as err:
         tbx.run('python -c "import this"', output='foobar')
-    assert '| or > required for string output' in str(err)
+    assert '| or > required for string output' in str(err.value)
 
 
 # -----------------------------------------------------------------------------
