@@ -4,17 +4,15 @@ Copyright 2019-... Tom Barron
 See LICENSE for details
 """
 from tbx import verinfo
+import setuptools
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
 
-# with open('README.md') as readme_file:
-#     readme = readme_file.read()
-
-# with open('HISTORY.rst') as history_file:
-#     history = history_file.read().replace('.. :changelog:', '')
+with open('README.md') as readme_file:
+    readme = readme_file.read()
 
 requirements = [
     # TODO: put package requirements here
@@ -25,16 +23,18 @@ test_requirements = [
 ]
 
 setup(
-    name='tbx',
+    name='zz-tbx',
     version=verinfo._v,
-    description="toolbox",
-    # long_description=readme,
+    description="Yet another toolbox library",
+    long_description=readme,
+    long_description_content_type="text/markdown",
     author="Tom Barron",
     author_email='tusculum@gmail.com',
     url='https://github.com/tbarron/tbx',
-    packages=[
-        'tbx',
-    ],
+    packages=setuptools.find_packages(),
+    # packages=[
+    #     'tbx',
+    # ],
     package_dir={'tbx': 'tbx'},
     # package_data={'tbx': './README.md'},
     include_package_data=True,
@@ -47,13 +47,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.8',
     ],
     test_suite='test_tbx',
     tests_require=test_requirements,
+    python_requires='>=3.6',
 )
