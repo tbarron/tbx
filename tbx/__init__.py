@@ -1,5 +1,8 @@
 """
 Toolbox
+
+Copyright 2019-... Tom Barron
+See LICENSE for details
 """
 import contextlib
 import os

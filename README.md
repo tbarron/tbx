@@ -1,5 +1,12 @@
 # Toolbox library in python
 
+## License
+
+Copyright 2019-... Tom Barron
+This software is released under the
+[ISC License](https://opensource.org/licenses/ISC). See the link or the
+file LICENSE in this distribution for detailed license provisions.
+
 ## Functions (see Examples below)
 
  * abspath(relpath)
@@ -354,5 +361,5 @@ With a coverage report showing the lines not tested
  * https://github.com/tbarron/nldt
  * https://github.com/tbarron/bearomator
  * https://github.com/tbarron/editor
- * https://github.com/tbarron/fx_python
+ * https://github.com/tbarron/fx
  * https://github.com/tbarron/pytool

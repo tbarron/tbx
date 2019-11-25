@@ -1,5 +1,8 @@
 """
 Configure pytest
+
+Copyright 2019-... Tom Barron
+See LICENSE for details
 """
 import os
 import pdb

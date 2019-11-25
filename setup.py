@@ -1,3 +1,8 @@
+"""
+Package zz-tbx installation
+Copyright 2019-... Tom Barron
+See LICENSE for details
+"""
 from tbx import verinfo
 try:
     from setuptools import setup

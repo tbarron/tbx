@@ -1,5 +1,8 @@
 """
 Tests for module tbx
+
+Copyright 2019-... Tom Barron
+See LICENSE for details
 """
 import os
 import re
