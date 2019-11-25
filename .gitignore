@@ -10,6 +10,7 @@ venv*
 .startup
 .tbx-cov
 .tox
+.project
 .#*
 \#*#
 *.pyc
