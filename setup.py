@@ -33,14 +33,13 @@ setup(
     author_email='tusculum@gmail.com',
     url='https://github.com/tbarron/tbx',
     packages=setuptools.find_packages(),
-    # packages=[
-    #     'tbx',
-    # ],
     package_dir={'tbx': 'tbx'},
-    # package_data={'tbx': './README.md'},
+    data_files=[
+        ('pkg_data/tbx/info', ['./LICENSE', './README.md', './CHANGELOG.md']),
+    ],
     include_package_data=True,
     install_requires=requirements,
-    license="ISCL",
+    license="unlicense",
     zip_safe=False,
     keywords='tbx',
     classifiers=[
@@ -53,5 +52,5 @@ setup(
     ],
     test_suite='test_tbx',
     tests_require=test_requirements,
-    python_requires='>=3.6',
+    python_requires='>=3.5.8',
 )
