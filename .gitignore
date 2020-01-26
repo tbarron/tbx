@@ -2,7 +2,7 @@
 __pycache__
 pytest.ini
 DODO*
-tbx.egg-info
+*tbx.egg-info
 .env
 venv
 venv*
@@ -10,6 +10,7 @@ venv*
 .startup
 .tbx-cov
 .tox
+.project
 .#*
 \#*#
 *.pyc

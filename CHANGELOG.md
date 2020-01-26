@@ -1,3 +1,17 @@
+## 1.1.7 ... 2020-01-26 08:31:27
+
+ * User Facing
+    * Applying the unlicense: "This is free and unencumbered software released
+      into the public domain. For more information, please refer to
+      <http://unlicense.org/>" (LICENSE, README.md, setup.py, tbx/__init__.py,
+      tbx/verinfo.py, test/conftest.py, test/test_tbx.py)
+
+ * Internal
+    * .gitignore egg-info directories and file .project (.gitignore)
+    * Upgraded pip, install . editably for development (requirements.txt)
+    * Set minimum python version, deliver data files, set the license (setup.py)
+    * Drop Pipfile, Pipfile.lock
+
 ## 1.1.6 ... 2019-11-17 09:25:15
 
  * Test both Python 3.6 and 3.8 in continuous integration (on travis)

@@ -1,5 +1,11 @@
 # Toolbox library in python
 
+## License
+
+This is free and unencumbered software released into the public domain.
+For more information, please refer to <http://unlicense.org/>
+
+
 ## Functions (see Examples below)
 
  * abspath(relpath)
@@ -354,5 +360,5 @@ With a coverage report showing the lines not tested
  * https://github.com/tbarron/nldt
  * https://github.com/tbarron/bearomator
  * https://github.com/tbarron/editor
- * https://github.com/tbarron/fx_python
+ * https://github.com/tbarron/fx
  * https://github.com/tbarron/pytool
