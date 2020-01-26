@@ -1,7 +1,8 @@
 """
 Package zz-tbx installation
-Copyright 2019-... Tom Barron
-See LICENSE for details
+
+This is free and unencumbered software released into the public domain.
+For more information, please refer to <http://unlicense.org/>
 """
 from tbx import verinfo
 import setuptools

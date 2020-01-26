@@ -2,10 +2,9 @@
 
 ## License
 
-Copyright 2019-... Tom Barron
-This software is released under the
-[ISC License](https://opensource.org/licenses/ISC). See the link or the
-file LICENSE in this distribution for detailed license provisions.
+This is free and unencumbered software released into the public domain.
+For more information, please refer to <http://unlicense.org/>
+
 
 ## Functions (see Examples below)
 
