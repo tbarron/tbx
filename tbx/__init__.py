@@ -6,6 +6,8 @@ For more information, please refer to <http://unlicense.org/>
 """
 import contextlib
 import glob
+from importlib import import_module
+import inspect
 import os
 import os.path as osp
 import random
@@ -247,6 +249,75 @@ def lglob(*args, dupl_allowed=False):
     if not dupl_allowed:
         rval = list(set(rval))
     return rval
+
+
+# -----------------------------------------------------------------------------
+def collect_missing_docs(treeroot):
+    """
+    In a tree, find all python files and scan each for functions/methods with
+    no doc string
+    """
+    importables = []
+    for dp, dl, fl in os.walk(treeroot):
+        del_these = []
+        for dname in dl:
+            if any([dname.startswith('venv'),
+                    dname.startswith('.'),
+                    dname == '__pycache__',
+                    'egg-info' in dname]):
+                del_these.append(dname)
+        for item in del_these:
+            dl.remove(item)
+        for fname in fl:
+            if fname.endswith(".py"):
+                iname = fname.replace(".py", "")
+                if iname == "__init__":
+                    importables.append(dp.replace("./", ""))
+                elif iname == "setup":
+                    continue
+                elif dp == '.':
+                    importables.append(iname)
+                else:
+                    importables.append("{}.{}".format(dp.replace("./", ""),
+                                                      iname))
+
+    missing_doc = []
+    for mname in importables:
+        try:
+            # print("import_module({})".format(mname))
+            mod = import_module(mname)
+
+            for name, obj in inspect.getmembers(mod, inspect.isclass):
+                if doc_missing(obj) and name not in missing_doc:
+                    missing_doc.append(name)
+
+                for mthname, mthobj in inspect.getmembers(obj,
+                                                          inspect.isfunction):
+                    if doc_missing(mthobj) and mthname not in missing_doc:
+                        missing_doc.append("{}.{}".format(name, mthname))
+
+            for name, obj in inspect.getmembers(mod, inspect.isfunction):
+                if doc_missing(obj) and name not in missing_doc:
+                    missing_doc.append("{}.{}".format(mname, name))
+
+        except SystemExit:
+            print("SystemExit: failed importing {}".format(mname))
+        except ImportError:
+            print("ImportError: failed importing {}".format(mname))
+
+    if missing_doc:
+        return missing_doc
+
+
+# -----------------------------------------------------------------------------
+def doc_missing(obj):
+    """
+    Check *obj* for a non-empty __doc__ element
+    """
+    if not hasattr(obj, '__doc__') or obj.__doc__ is None:
+        return True
+    else:
+        return False
 
 
 # -----------------------------------------------------------------------------

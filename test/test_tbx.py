@@ -497,6 +497,17 @@ def test_lglob(flist, glist, dupl_allowed, exp, tmpdir):
 
 
 # -----------------------------------------------------------------------------
+def test_missing_doc():
+    """
+    This function has a doc string
+    """
+    pytest.dbgfunc()
+    exp = ["test.test_tbx.xtst_undocumented"]
+    result = tbx.collect_missing_docs(".")
+    assert result == exp
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("ref, direction, window, lowest, highest", [
     pytest.param(100, 1, 10, 100, 110, id="u"),
     pytest.param(100, 0, 10, 95, 105, id="c"),
