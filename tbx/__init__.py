@@ -53,6 +53,14 @@ def basename(path, segments=None):
 
 
 # -----------------------------------------------------------------------------
+def caller_name():
+    """
+    Return the name of the caller of the caller
+    """
+    return inspect.stack()[2].function
+
+
+# -----------------------------------------------------------------------------
 @contextlib.contextmanager
 def chdir(directory):
     """

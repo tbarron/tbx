@@ -69,6 +69,15 @@ def test_basename(arg, kw, exp):
 
 
 # -----------------------------------------------------------------------------
+def test_caller_name():
+    """
+    Test function to retrieve the name of the caller of this function
+    """
+    pytest.dbgfunc()
+    assert tbx.caller_name() == "pytest_pyfunc_call"
+
+
+# -----------------------------------------------------------------------------
 def test_chdir_good(tmpdir):
     """
     chdir(a.directory.that.exists) should work. After the with statement, we
