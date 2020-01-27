@@ -469,6 +469,22 @@ def test_fatal_number():
 
 
 # -----------------------------------------------------------------------------
+@pytest.mark.parametrize("ref, direction, window, lowest, highest", [
+    pytest.param(100, 1, 10, 100, 110, id="u"),
+    pytest.param(100, 0, 10, 95, 105, id="c"),
+    pytest.param(100, -1, 10, 90, 100, id="d"),
+])
+def test_randomize(ref, direction, window, lowest, highest):
+    """
+    Test randomize
+    """
+    pytest.dbgfunc()
+    for tries in range(1000):
+        actual = tbx.randomize(ref, direction, window)
+        assert lowest <= actual <= highest
+
+
+# -----------------------------------------------------------------------------
 def test_revnumerate():
     """
     Enumerate a copy of a sequence in reverse as a generator

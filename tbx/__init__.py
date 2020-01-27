@@ -7,6 +7,7 @@ For more information, please refer to <http://unlicense.org/>
 import contextlib
 import os
 import os.path as osp
+import random
 import re
 import shlex
 try:
@@ -233,6 +234,31 @@ def git_status():
     untracked = [re.sub(subx, "", x) for x in result.split("\n")
                  if re.match(utrkx, x)]
     return(staged, unstaged, untracked)
+
+
+# -----------------------------------------------------------------------------
+def randomize(ref=None, direction=None, window=None):
+    """
+    Return a random integer value based on REF, DIRECTION, and WINDOW.
+
+    DIRECTION should be +1, -1, or 0 to indicate whether the random value
+    should be above, below, or centered on REF.
+
+    WINDOW indicates how far away from REF generated random values can fall.
+    """
+    ref = int(ref + 0.5) or 0
+    direction = int(direction) or 0
+    window = int(window) or 100
+    if 0 < direction:
+        high = ref + window
+        low = ref
+    elif direction < 0:
+        high = ref
+        low = ref - window
+    else:
+        high = ref + (window / 2)
+        low = ref - (window / 2)
+    return random.randint(low, high)
 
 
 # -----------------------------------------------------------------------------
