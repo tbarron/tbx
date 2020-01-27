@@ -5,6 +5,7 @@ This is free and unencumbered software released into the public domain.
 For more information, please refer to <http://unlicense.org/>
 """
 import contextlib
+import glob
 import os
 import os.path as osp
 import random
@@ -234,6 +235,18 @@ def git_status():
     untracked = [re.sub(subx, "", x) for x in result.split("\n")
                  if re.match(utrkx, x)]
     return(staged, unstaged, untracked)
+
+
+# -----------------------------------------------------------------------------
+def lglob(*args, dupl_allowed=False):
+    """
+    glob a list of paths and return the results in a single list
+    """
+    rval = []
+    [rval.extend(y) for y in [glob.glob(x) for x in args]]
+    if not dupl_allowed:
+        rval = list(set(rval))
+    return rval
 
 
 # -----------------------------------------------------------------------------

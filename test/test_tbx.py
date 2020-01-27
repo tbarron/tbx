@@ -469,6 +469,34 @@ def test_fatal_number():
 
 
 # -----------------------------------------------------------------------------
+@pytest.mark.parametrize("flist,glist,dupl_allowed,exp", [
+    pytest.param(["abc", "arb", "bob"], ["*b", "a*"], False,
+                 ["abc", "arb", "bob"], id="f-all"),
+    pytest.param(["abc", "arb", "bob"], ["*b", "b*"], False,
+                 ["arb", "bob"], id="f-some"),
+    pytest.param(["abc", "arb", "bob"], ["*b", "a*"], True,
+                 ["abc", "arb", "arb", "bob"], id="t-all-dup"),
+    pytest.param(["abc", "arb", "bob"], ["*b", "b*"], True,
+                 ["arb", "bob", "bob"], id="t-some-dup"),
+])
+def test_lglob(flist, glist, dupl_allowed, exp, tmpdir):
+    """
+    Test lglob, which takes a list of glob expressions, globs each one, and
+    returns the result in a single list. Removes duplicates unless dupl_allowed
+    is True.
+    """
+    pytest.dbgfunc()
+    for item in flist:
+        tmpdir.join(item).ensure()
+    if dupl_allowed:
+        result = tbx.lglob(*[tmpdir.join(_).strpath for _ in glist],
+                           dupl_allowed=True)
+    else:
+        result = tbx.lglob(*[tmpdir.join(_).strpath for _ in glist])
+    assert sorted([os.path.basename(_) for _ in result]) == sorted(exp)
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("ref, direction, window, lowest, highest", [
     pytest.param(100, 1, 10, 100, 110, id="u"),
     pytest.param(100, 0, 10, 95, 105, id="c"),
