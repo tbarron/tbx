@@ -4,13 +4,13 @@ Tests for module tbx
 This is free and unencumbered software released into the public domain.
 For more information, please refer to <http://unlicense.org/>
 """
+import io
 import os
+import pytest
 import re
 import shlex
 import shutil
-import io
 import subprocess as subp
-import pytest
 import tbx
 
 
