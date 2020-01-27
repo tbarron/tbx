@@ -517,6 +517,15 @@ def test_missing_doc():
 
 
 # -----------------------------------------------------------------------------
+def test_my_name():
+    """
+    Test function to retrieve the name of this function
+    """
+    pytest.dbgfunc()
+    assert tbx.my_name() == "test_my_name"
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("ref, direction, window, lowest, highest", [
     pytest.param(100, 1, 10, 100, 110, id="u"),
     pytest.param(100, 0, 10, 95, 105, id="c"),

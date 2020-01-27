@@ -329,6 +329,14 @@ def doc_missing(obj):
 
 
 # -----------------------------------------------------------------------------
+def my_name():
+    """
+    Return the name of the caller
+    """
+    return inspect.stack()[1].function
+
+
+# -----------------------------------------------------------------------------
 def randomize(ref=None, direction=None, window=None):
     """
     Return a random integer value based on REF, DIRECTION, and WINDOW.
