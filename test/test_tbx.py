@@ -516,6 +516,33 @@ def test_git_last_tag():
 
 
 # -----------------------------------------------------------------------------
+def test_git_status(tmpdir):
+    """
+    Set up a git repo and arrange it to test tbx.git_hash()
+    """
+    pytest.dbgfunc()
+    with tbx.chdir(tmpdir.strpath):
+        tbx.run("git init")
+
+        untracked = tmpdir.join("untracked").ensure()
+        unstaged = tmpdir.join("unstaged").ensure()
+        staged = tmpdir.join("staged").ensure()
+
+        tbx.run("git add staged unstaged")
+        tbx.run("git commit -m \"set up test\"")
+
+        staged.write("this should be staged")
+        unstaged.write("this should be unstaged")
+        untracked.write("this will not be tracked")
+
+        tbx.run("git add staged")
+        staged_l, unstaged_l, untracked_l = tbx.git_status()
+        assert staged_l == ["staged"]
+        assert unstaged_l == ["unstaged"]
+        assert untracked_l == ["untracked"]
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("flist,glist,dupl_allowed,exp", [
     pytest.param(["abc", "arb", "bob"], ["*b", "a*"], False,
                  ["abc", "arb", "bob"], id="f-all"),
