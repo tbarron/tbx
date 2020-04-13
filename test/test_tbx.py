@@ -491,6 +491,16 @@ def test_git_current_branch():
 
 
 # -----------------------------------------------------------------------------
+def test_git_hash():
+    """
+    Verify that tbx.git_hash() behaves as expected.
+    """
+    pytest.dbgfunc()
+    exp = tbx.run("git --no-pager log -1 --format='%H' 1.0.0").strip()
+    assert tbx.git_hash("1.0.0") == exp
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("flist,glist,dupl_allowed,exp", [
     pytest.param(["abc", "arb", "bob"], ["*b", "a*"], False,
                  ["abc", "arb", "bob"], id="f-all"),
