@@ -12,6 +12,7 @@ import re
 import shlex
 import shutil
 import subprocess as subp
+import sys
 import tbx
 
 
@@ -536,6 +537,45 @@ def test_missing_doc():
     pytest.dbgfunc()
     exp = ["test.test_tbx.xtst_undocumented"]
     result = tbx.collect_missing_docs(".")
+    assert result == exp
+
+
+# -----------------------------------------------------------------------------
+def test_missing_doc_td(tmpdir):
+    """
+    Write some .py files in tmpdir and test on those
+    """
+    pytest.dbgfunc()
+    tcontent = [
+        "def %_with_doc():",
+        "    \"\"\"",
+        "    This function has a docstring",
+        "    \"\"\"",
+        "    pass",
+        "",
+        "def %_no_doc():",
+        "    print(\"undocumented function\")", ]
+    fpath_l = {"testee/__init__.py": "ti",
+               "frippety/aardvark.py": "aard",
+               "frippety/__init__.py": "aard_init",
+               "venv/bogus.py": "bog",
+               ".foobar/fumple.py": "fump",
+               "__pycache__/balderdash.py": "bald",
+               "foo.egg-info/fooyung.py": "flop",
+               "setup.py": "schtup",
+               "froo/icles.py": "ick"}
+    for key in fpath_l:
+        fpath = tmpdir.join(key).ensure()
+        pfx = fpath_l[key]
+        content = "\n".join(tcontent).replace("%", pfx)
+        fpath.write(content)
+    exp = ["testee.ti_no_doc",
+           "frippety.aardvark.aard_no_doc",
+           "frippety.aard_init_no_doc",
+           "froo.icles.ick_no_doc"]
+    with tbx.chdir(tmpdir.strpath):
+        sys.path.insert(0, ".")
+        result = tbx.collect_missing_docs(".")
     assert result == exp
 
 

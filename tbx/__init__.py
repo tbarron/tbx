@@ -263,6 +263,7 @@ def collect_missing_docs(treeroot):
     no doc string
     """
     importables = []
+    prefix = treeroot + "/"
     for dp, dl, fl in os.walk(treeroot):
         del_these = []
         for dname in dl:
@@ -277,13 +278,13 @@ def collect_missing_docs(treeroot):
             if fname.endswith(".py"):
                 iname = fname.replace(".py", "")
                 if iname == "__init__":
-                    importables.append(dp.replace("./", ""))
+                    importables.append(dp.replace(prefix, ""))
                 elif iname == "setup":
                     continue
                 elif dp == '.':
                     importables.append(iname)
                 else:
-                    importables.append("{}.{}".format(dp.replace("./", ""),
+                    importables.append("{}.{}".format(dp.replace(prefix, ""),
                                                       iname))
 
     missing_doc = []
