@@ -2,13 +2,14 @@
 __pycache__
 pytest.ini
 DODO*
+TAGS
 *tbx.egg-info
 .env
 venv
 venv*
 .coverage*
 .startup
-.tbx-cov
+.tbx-cov*
 .tox
 .project
 .#*
