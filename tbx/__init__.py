@@ -219,11 +219,8 @@ def git_current_branch():
     """
     Run 'git branch' and return the one marked with a '*'
     """
-    result = run("git branch")
-    for candy in result.split("\n"):
-        if "*" in candy:
-            curb = candy.split()[1]
-            break
+    curb = run("git symbolic-ref --short HEAD")
+    curb = curb.strip()
     return curb
 
 

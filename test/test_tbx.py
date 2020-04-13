@@ -6,6 +6,7 @@ For more information, please refer to <http://unlicense.org/>
 """
 import io
 import os
+import py
 import pytest
 import re
 import shlex
@@ -475,6 +476,18 @@ def test_fatal_number():
     with pytest.raises(SystemExit) as err:
         tbx.fatal(msg)
     assert str(msg) in str(err.value)
+
+
+# -----------------------------------------------------------------------------
+def test_git_current_branch():
+    """
+    Test for tbx.git_current_branch(). We get the list of branches and verify
+    that '* CURRENT_BRANCH' shows up
+    """
+    pytest.dbgfunc()
+    blist = tbx.run("git branch").split("\n")
+    marked = "* " + tbx.git_current_branch()
+    assert marked in blist
 
 
 # -----------------------------------------------------------------------------
