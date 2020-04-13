@@ -4,6 +4,7 @@ Tests for module tbx
 This is free and unencumbered software released into the public domain.
 For more information, please refer to <http://unlicense.org/>
 """
+import glob
 import io
 import os
 import py
@@ -499,6 +500,19 @@ def test_git_hash():
     pytest.dbgfunc()
     exp = tbx.run("git --no-pager log -1 --format='%H' 1.0.0").strip()
     assert tbx.git_hash("1.0.0") == exp
+
+
+# -----------------------------------------------------------------------------
+def test_git_last_tag():
+    """
+    Run git_last_tag(). We can look in .git/refs/tags to verify whether it
+    returns the right thing.
+    """
+    pytest.dbgfunc()
+    tag_l = sorted([py.path.local(_) for _ in glob.glob(".git/refs/tags/*")],
+                   key=lambda x: x.mtime())
+    exp = tbx.basename(tag_l[-1].strpath)
+    assert tbx.git_last_tag() == exp
 
 
 # -----------------------------------------------------------------------------
