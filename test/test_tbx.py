@@ -132,6 +132,42 @@ def test_chdir_rug(tmpdir):
 
 
 # -----------------------------------------------------------------------------
+def test_cmkdir_already(tmpdir):
+    """
+    Test function tbx.cmkdir where path already exists
+    """
+    pytest.dbgfunc()
+    target = tmpdir.join("target").ensure(dir=True)
+    assert os.path.isdir(target.strpath)
+    result = tbx.cmkdir(target.strpath)
+    assert result.strpath == target.strpath
+
+
+# -----------------------------------------------------------------------------
+def test_cmkdir_missing_parent(tmpdir):
+    """
+    Test function tbx.cmkdir where path contains missing intermediates
+    """
+    pytest.dbgfunc()
+    target = tmpdir.join("xyzzy/target")
+    assert not os.path.isdir(target.strpath)
+    result = tbx.cmkdir(target.strpath)
+    assert result.strpath == target.strpath
+
+
+# -----------------------------------------------------------------------------
+def test_cmkdir_nosuch(tmpdir):
+    """
+    Test function tbx.cmkdir where path does not exist
+    """
+    pytest.dbgfunc()
+    target = tmpdir.join("target")
+    assert not os.path.isdir(target.strpath)
+    result = tbx.cmkdir(target.strpath)
+    assert result.strpath == target.strpath
+
+
+# -----------------------------------------------------------------------------
 def test_contents_nosuch_default(ctest):
     """
     Attempting to get the contents of a non-existent file with a default value

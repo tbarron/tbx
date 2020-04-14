@@ -11,6 +11,7 @@ import inspect
 import os
 import os.path as osp
 import pdb
+from py.path import local
 import random
 import re
 import shlex
@@ -76,6 +77,20 @@ def chdir(directory):
 
     finally:
         os.chdir(origin)
+
+
+# -----------------------------------------------------------------------------
+def cmkdir(path):
+    """
+    If *path* exists, do nothing, return local(path). Otherwise, call
+    os.makedirs() to create the path, including any missing intermediates and
+    return local(path) if the operation is successful. If the directory
+    creation fails, return None.
+    """
+    rv = local(path)
+    if not os.path.isdir(rv.strpath):
+        rv.ensure(dir=True)
+    return rv
 
 
 # -----------------------------------------------------------------------------
