@@ -282,11 +282,12 @@ def lglob(*args, dupl_allowed=False):
 
 
 # -----------------------------------------------------------------------------
-def collect_missing_docs(treeroot):
+def collect_missing_docs(treeroot, ignore_l=None):
     """
     In a tree, find all python files and scan each for functions/methods with
     no doc string
     """
+    ignore_l = ignore_l or []
     importables = []
     prefix = treeroot + "/"
     for dp, dl, fl in os.walk(treeroot):
@@ -319,6 +320,8 @@ def collect_missing_docs(treeroot):
             mod = import_module(mname)
 
             for name, obj in inspect.getmembers(mod, inspect.isclass):
+                if name in ignore_l:
+                    continue
                 if doc_missing(obj) and name not in missing_doc:
                     missing_doc.append(name)
 

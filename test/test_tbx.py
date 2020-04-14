@@ -613,7 +613,7 @@ def test_missing_doc():
     """
     pytest.dbgfunc()
     exp = ["test.test_tbx.xtst_undocumented"]
-    result = tbx.collect_missing_docs(".")
+    result = tbx.collect_missing_docs(".", ignore_l=["local"])
     assert result == exp
 
 
