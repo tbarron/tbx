@@ -10,6 +10,7 @@ from importlib import import_module
 import inspect
 import os
 import os.path as osp
+import pdb
 import random
 import re
 import shlex
@@ -75,6 +76,15 @@ def chdir(directory):
 
     finally:
         os.chdir(origin)
+
+
+# -----------------------------------------------------------------------------
+def conditional_debug(**kw):
+    """
+    If kw['d'] is True, start the debugger
+    """
+    if kw['d']:
+        pdb.set_trace()
 
 
 # -----------------------------------------------------------------------------
