@@ -105,7 +105,20 @@ def conditional_debug(**kw):
 # -----------------------------------------------------------------------------
 def contents(name=None, default=None, fmt='str', sep=None):
     """
-    Return the contents
+    Return the contents of file named *name*. If the file does not exist,
+    return the value in *default*. If the file is not accessible for some other
+    reason, raise an exception.
+
+    The *fmt* argument determines the format of the return value. It can be
+    'str', str, 'list', or list. If it is 'str' or str, the contents of the
+    file is returned as a string.
+
+    If it is 'list' or list, the contents of the file will be split on the
+    value of *sep* and the resulting list will be returned.
+
+    The *sep* argument can be a regex in a string or a list of regexes. If
+    *fmt* is 'list' or list and *sep* is not specified, the file content will
+    be split on '\n'.
     """
     try:
         rbl = open(name, 'r')
@@ -119,7 +132,11 @@ def contents(name=None, default=None, fmt='str', sep=None):
             raise
     if fmt == 'list' or fmt == list:
         sep = sep or '\n'
-        rval = re.split(sep, data)
+        if isinstance(sep, str):
+            rsep = sep
+        elif isinstance(sep, list):
+            rsep = "|".join(sep)
+        rval = re.split(rsep, data)
     elif fmt == 'str' or fmt == str:
         if sep:
             raise Error('Non-default separator is only valid for list format')
