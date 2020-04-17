@@ -207,7 +207,7 @@ def test_contents_good_str(ctest):
 # -----------------------------------------------------------------------------
 def test_contents_good_list(ctest):
     """
-    Calling contents on a file that exists as a list
+    Calling contents on a file that exists, asking for output as a list
     """
     pytest.dbgfunc()
     result = tbx.contents(ctest.data.strpath, fmt='list')
@@ -217,7 +217,7 @@ def test_contents_good_list(ctest):
 # -----------------------------------------------------------------------------
 def test_contents_good_altsep(ctest):
     """
-    Calling contents on a file that exists as a list
+    Calling contents on a file that exists, asking for output as a list
     """
     pytest.dbgfunc()
     result = tbx.contents(ctest.data.strpath, fmt='list', sep=r'\s')
