@@ -226,6 +226,18 @@ def test_contents_good_altsep(ctest):
 
 
 # -----------------------------------------------------------------------------
+def test_contents_good_seplist(ctest):
+    """
+    Calling contents on a file that exists as a list
+    """
+    pytest.dbgfunc()
+    exp = re.split(r'the|is', ctest.exp)
+    result = tbx.contents(ctest.data.strpath, fmt='list', sep=["the", "is"])
+    assert len(result) == len(exp)
+    assert result == exp
+
+
+# -----------------------------------------------------------------------------
 def test_contents_badfmt(ctest):
     """
     Calling contents on a file that exists with an invalid separator
