@@ -287,6 +287,19 @@ def git_status():
 
 
 # -----------------------------------------------------------------------------
+def isnum_str(inp):
+    """
+    Return True if the string input *inp* contains only whitespace and digits
+    """
+    if not isinstance(inp, str):
+        return False
+    elif re.match(r"^\s*\d+\s*$", inp):
+        return True
+    else:
+        return False
+
+
+# -----------------------------------------------------------------------------
 def lglob(*args, dupl_allowed=False):
     """
     glob a list of paths and return the results in a single list

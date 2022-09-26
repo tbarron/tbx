@@ -5,4 +5,4 @@ not conflict at import with the tbx method version()
 This is free and unencumbered software released into the public domain.
 For more information, please refer to <http://unlicense.org/>
 """
-_v = '1.1.7'
+_v = '1.1.8'

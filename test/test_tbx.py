@@ -591,6 +591,26 @@ def test_git_status(tmpdir):
 
 
 # -----------------------------------------------------------------------------
+@pytest.mark.parametrize("inp, exp", [
+    pytest.param("17", True, id="001"),
+    pytest.param("q17", False, id="002"),
+    pytest.param("   24", True, id="003"),
+    pytest.param("   24zz ", False, id="004"),
+    pytest.param("43    ", True, id="005"),
+    pytest.param(93, False, id="006"),
+    pytest.param([1, 2, 3], False, id="007"),
+    pytest.param(["a", "b", "c"], False, id="008"),
+])
+def test_isnum_str(inp, exp):
+    """
+    Test function tbx.isnum_str(), which is expected to return True if the
+    string input contains only whitespace and digits.
+    """
+    pytest.dbgfunc()
+    assert exp == tbx.isnum_str(inp)
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("flist,glist,dupl_allowed,exp", [
     pytest.param(["abc", "arb", "bob"], ["*b", "a*"], False,
                  ["abc", "arb", "bob"], id="f-all"),

@@ -1,3 +1,19 @@
+## 1.1.8 ...
+
+ * User facing
+    * Add payload and test for randomize, lglob, collect_missing_docs,
+      caller_name, my_name, isnum_str, cmkdir
+    * Add tests for git_hash, git_last_tag, git_current_branch, git_status
+    * Support list value in sep arg to tbx.contents()
+
+ * Internal
+    * Test coverage tracking and reporting
+    * Simplify git_current_branch()
+    * Test for git_hash that does not depend on a specific hash value
+    * .gitignore TAGS, .tbx-cov, etc.
+    * Update version string
+
+
 ## 1.1.7 ... 2020-01-26 08:31:27
 
  * User Facing
