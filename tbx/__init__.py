@@ -28,7 +28,10 @@ from tbx import verinfo
 # -----------------------------------------------------------------------------
 def abspath(relpath):
     """
-    Returns the absolute path of *relpath*
+    Returns the absolute path of *relpath*. This has the same functionality as
+    os.path.abspath, but a shorter name, and it corresponds to basename() and
+    dirname() so that when no other os.path functionality is required, tbx can
+    replace it.
     """
     return osp.abspath(relpath)
 
@@ -36,7 +39,10 @@ def abspath(relpath):
 # -----------------------------------------------------------------------------
 def basename(path, segments=None):
     """
-    Returns the basename of *path*
+    Returns the basename of *path*. With only the first argument, this provides
+    the same functionality as os.path.basename. However, its overall name is
+    shorter and it corresponds to abspath() and dirname(), allowing tbx to
+    replace os.path if no other os.path functionality is required.
     """
     if segments is None:
         segs = 1
@@ -57,7 +63,9 @@ def basename(path, segments=None):
 # -----------------------------------------------------------------------------
 def caller_name():
     """
-    Return the name of the caller of the caller
+    Return the name of the calling function of the function from which this
+    routine is called. That is, this function returns the name of its
+    grand-caller.
     """
     return inspect.stack()[2].function
 
@@ -66,9 +74,15 @@ def caller_name():
 @contextlib.contextmanager
 def chdir(directory):
     """
-    Context-based directory excursion
+    Provides a context-based directory excursion. For example, given the
+    following code:
 
-    When the with statement ends, you're back where you started.
+        with chdir(somedir):
+            foo(baz)
+
+    The call to foo() with argument baz will take place with somedir being the
+    current directory. Once the with scope completes, the directory context
+    returns to where it was before the with scope began.
     """
     origin = os.getcwd()
     try:
@@ -82,10 +96,10 @@ def chdir(directory):
 # -----------------------------------------------------------------------------
 def cmkdir(path):
     """
-    If *path* exists, do nothing, return local(path). Otherwise, call
-    os.makedirs() to create the path, including any missing intermediates and
-    return local(path) if the operation is successful. If the directory
-    creation fails, return None.
+    If *path* exists, do nothing, returning local(path). Otherwise, call
+    os.makedirs() to create *path*, including any missing intermediate
+    segments, and return local(path) if the operation is successful. If the
+    directory creation fails, return None.
     """
     rv = local(path)
     if not os.path.isdir(rv.strpath):
@@ -96,7 +110,8 @@ def cmkdir(path):
 # -----------------------------------------------------------------------------
 def conditional_debug(**kw):
     """
-    If kw['d'] is True, start the debugger
+    If kw['d'] is True, start the debugger after the call to
+    conditional_debug()
     """
     if kw['d']:
         pdb.set_trace()
@@ -118,7 +133,7 @@ def contents(name=None, default=None, fmt='str', sep=None):
 
     The *sep* argument can be a regex in a string or a list of regexes. If
     *fmt* is 'list' or list and *sep* is not specified, the file content will
-    be split on '\n'.
+    be split on '\\n'.
     """
     try:
         rbl = open(name, 'r')
@@ -149,8 +164,10 @@ def contents(name=None, default=None, fmt='str', sep=None):
 # -----------------------------------------------------------------------------
 def dirname(path, segments=None, level=None):
     """
-    Peel off *segments* tails from path. Argument level is DEPRECATED but will
-    continue to be supported for a few releases for backward compatibility.
+    Remove *segments* tails from path and return what's left. If segments is
+    not specified, it defaults to 1. Argument *level* is DEPRECATED but will
+    continue to be honored as a synomym for *segements* for a few releases for
+    backward compatibility.
     """
     if segments is None and level is None:
         segs = 1
@@ -170,9 +187,13 @@ def dirname(path, segments=None, level=None):
 def envset(**kwargs):
     """
     Set environment variables that will last for the duration of the with
-    statement.
+    excursion.
 
     To unset a variable temporarily, pass its value as None.
+
+    Example:
+        with tbx.envset(PATH='whatever'):
+            ... do stuff ...
     """
     prev = {}
     try:
@@ -201,7 +222,7 @@ def envset(**kwargs):
 # -----------------------------------------------------------------------------
 def exists(path):
     """
-    Return True if *path* exists, else False
+    Return True if *path* exists, else False. This mirrors os.path.exists().
     """
     return osp.exists(path)
 
@@ -209,7 +230,7 @@ def exists(path):
 # -----------------------------------------------------------------------------
 def expand(path):
     """
-    Return path with any '~' or env vars expanded.
+    Return path with any '~' expressions or env vars expanded.
     """
     return _expanduser(osp.expandvars(path))
 
@@ -217,7 +238,7 @@ def expand(path):
 # -----------------------------------------------------------------------------
 def _expanduser(instr):
     """
-    Expand '~' to the contents of $HOME
+    Expand '~' to the value of $HOME
     """
     hval = os.getenv("HOME") or ""
     rval = re.sub("~", hval, instr)
@@ -227,7 +248,7 @@ def _expanduser(instr):
 # -----------------------------------------------------------------------------
 def fatal(msg='Fatal error with no reason specified'):
     """
-    The default value is okay because strings in python are immutable
+    Display *msg* before exiting the current process
     """
     sys.exit(msg)
 
@@ -235,7 +256,7 @@ def fatal(msg='Fatal error with no reason specified'):
 # -----------------------------------------------------------------------------
 def git_last_tag():
     """
-    Return the most recently defined tag
+    If we're in a git repo, return the most recently defined tag.
     """
     result = run("git --no-pager tag")
     tag_l = result.strip().split("\n")
@@ -246,8 +267,8 @@ def git_last_tag():
 # -----------------------------------------------------------------------------
 def git_hash(ref=None):
     """
-    Return a hash -- of HEAD if *ref* == None, of whatever *ref* points to if
-    specified
+    If we're in a git repo, return a hash of *ref*. If *ref* is None (i.e.,
+    unspecified), return a hash of HEAD.
     """
     cmd = "git --no-pager log -1 --format=format:\"%H\""
     if ref:
@@ -259,7 +280,7 @@ def git_hash(ref=None):
 # -----------------------------------------------------------------------------
 def git_current_branch():
     """
-    Run 'git branch' and return the one marked with a '*'
+    If we're in a git repo, return the name of the currently active branch.
     """
     curb = run("git symbolic-ref --short HEAD")
     curb = curb.strip()
@@ -314,8 +335,8 @@ def lglob(*args, dupl_allowed=False):
 # -----------------------------------------------------------------------------
 def collect_missing_docs(treeroot, ignore_l=None):
     """
-    In a tree, find all python files and scan each for functions/methods with
-    no doc string
+    Find all python files in a directory tree and report any functions/methods
+    that have no doc string or an undefined one.
     """
     ignore_l = ignore_l or []
     importables = []
@@ -376,7 +397,9 @@ def collect_missing_docs(treeroot, ignore_l=None):
 # -----------------------------------------------------------------------------
 def doc_missing(obj):
     """
-    Check *obj* for a non-empty __doc__ element
+    The doc string is considered missing if there is no __doc__ element or if
+    *obj*.__doc__ is None. Note that a blank or empty doc string ("", " ") is
+    not considered missing.
     """
     if not hasattr(obj, '__doc__') or obj.__doc__ is None:
         return True
@@ -387,7 +410,11 @@ def doc_missing(obj):
 # -----------------------------------------------------------------------------
 def my_name():
     """
-    Return the name of the caller
+    Return the name of the caller.
+
+    Example:
+        me = tbx.my_name()
+        print("{} says 'hello!'", me)
     """
     return inspect.stack()[1].function
 
@@ -432,6 +459,27 @@ def revnumerate(sequence):
 def run(cmd, input=None, output=None):
     """
     Run *cmd* in a separate process. Return stdout + stderr.
+
+    If *input* is an io.StringIO, its contents will be used as stdin for the
+    child process.
+
+    If *input* is a str beginning with '<', the following text will be treated
+    as a file name and that file will be opened and read as the child's stdin.
+
+    If *input* is a str ending with '|', the preceding text will be treated as
+    a command and the child's stdin will come from the command's stdout.
+
+    If *input* is an int (file descriptor) or a file, it will be used as stdin
+    for the child process.
+
+    If *output* is a str beginning with '>', the following text will be treated
+    as a file name and that file will be opened to receive child's stdout.
+
+    If *output* is a str beginning with '|', the following text will be treated
+    as a command and child's stdout will be connected to the command's stdin.
+
+    If *output* is a file descriptor (int) or file, it will be used to receive
+    child's stdout.
     """
     posarg = shlex.split(str(cmd))
     kwa = {'stdin': sproc.PIPE,
@@ -494,7 +542,7 @@ def run(cmd, input=None, output=None):
 # -----------------------------------------------------------------------------
 def version():
     """
-    Returns the current project version
+    Returns the current tbx project version
     """
     return verinfo._v
 
