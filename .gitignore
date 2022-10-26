@@ -1,8 +1,10 @@
+.ackrc
 .cache
 __pycache__
 pytest.ini
 DODO*
 TAGS
+tbx.pydoc.txt
 *tbx.egg-info
 .env
 venv
