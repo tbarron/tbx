@@ -5,12 +5,15 @@
       caller_name, my_name, isnum_str, cmkdir
     * Add tests for git_hash, git_last_tag, git_current_branch, git_status
     * Support list value in sep arg to tbx.contents()
+    * Improved doc strings for the functions
+    * Simplified README.md
 
  * Internal
     * Test coverage tracking and reporting
     * Simplify git_current_branch()
     * Test for git_hash that does not depend on a specific hash value
     * .gitignore TAGS, .tbx-cov, etc.
+    * Add 'clean' target to Makefile to remove emacs leftover files
     * Update version string
 
 
